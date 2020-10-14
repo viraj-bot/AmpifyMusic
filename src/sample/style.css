@@ -1,0 +1,176 @@
+.music_player {
+    -fx-background-color : #383838;
+}
+
+.jfx-autocomplete-popup .list-cell {
+    -fx-font-family : "Roboto Regular";
+}
+
+.scroll_pane {
+    -fx-background-color :  linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);
+    -fx-background :  linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);
+}
+
+
+.jfx-text-field{
+-fx-prompt-text-fill: WHITE;
+
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color :black;
+    -fx-border-color :black;
+    -fx-background-radius : 0.0em;
+    -fx-border-radius :2.0em;
+}
+
+
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color :black;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color :black;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.15em 0.0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.0 0.15em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color :derive(black,10.0%);
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color :derive(black,90.0%);
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
+.current_playlist_song > Label{
+    -fx-text-fill:green;
+}
+
+.card {
+    -fx-background-color : #383838;
+    -fx-background-radius: 10;
+    -fx-background-insets: 5;
+    -fx-effect: dropshadow(three-pass-box, #383838, 10, 0, 0, 0);
+}
+
+.side_pane, .dialog_style {
+    -fx-background-color : #282828;
+}
+
+.dropshadow_label {
+    -fx-effect: dropshadow(three-pass-box, #383838, 10, 0, 0, 0);
+}
+
+.library_pane, .music_library_pane, .playlists_pane, .settings_pane, .browse_pane {
+    -fx-background-color : #484848;
+}
+
+.label {
+    -fx-text-fill : white;
+}
+
+.jfx-text-field {
+    -jfx-focus-color : #0e9654;
+    -jfx-unfocus-color : #a1a1a1;
+}
+
+.jfx-text-field, .jfx-password-field {
+    -fx-prompt-text-fill : WHITE;
+    -fx-text-inner-color : WHITE;
+}
+
+.grey_text {
+    -fx-text-fill : #B3B3B3;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: #242424;
+}
+
+.list-view .list-cell {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.list-view .list-cell2 {
+    -fx-background-color:  black;
+    -fx-text-fill: white;
+}
+
+.list-view {
+    -fx-text-fill: white;
+}
+
+.song_name {
+    -fx-text-fill : white;
+}
+
+.song_dur {
+    -fx-text-fill : white;
+}
+
+.song_artist_name {
+    -fx-text-fill : #B3B3B3;
+}
+
+.jfx-slider > .track {
+    -fx-control-inner-background : #505050;
+}
+
+.music_player_button {
+    -fx-background-radius : 25;
+}
+
+.jfx-rippler {
+    -jfx-rippler-fill: #0e9654;
+}
+
+.label_green {
+    -fx-text-fill : #0e9654;
+}
+
+*{
+    pixels-to-cover-for-song-seek : 50;
+}
+
+.slider {
+    -fx-background-color: #9e9e9e;
+    -fx-pref-height:15;
+    -fx-background-radius: 0;
+    -fx-background-insets: 6 0 6 0;
+}
+
+.slider .track {
+    -fx-background-color: transparent;
+}
+
+.slider .thumb {
+    -fx-background-color:  #0F9D58;
+    -fx-background-radius: 20;
+}

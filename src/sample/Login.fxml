@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootPane" prefHeight="463.0" prefWidth="631.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.LoginController">
+   <children>
+      <AnchorPane prefHeight="456.0" prefWidth="294.0">
+         <children>
+            <ImageView blendMode="SRC_ATOP" fitHeight="463.0" fitWidth="310.0" opacity="0.84">
+               <image>
+                  <Image url="@Icons/MusicBack2.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="60.0" fitWidth="63.0" layoutX="119.0" layoutY="165.0">
+               <image>
+                  <Image url="@Icons/appIcon.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="84.0" layoutY="236.0" text="Ampify Music" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="311.0" prefHeight="463.0" prefWidth="320.0" style="-fx-background-color: linear-gradient(to left, #050003, #0c090c, #121112, #171617, #1b1b1b, #1e1e1e, #222222, #252525, #282828, #2c2c2c, #2f2f2f, #333333);">
+         <children>
+            <Label layoutX="24.0" layoutY="32.0" text="Sign In" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="22.0" />
+               </font>
+            </Label>
+            <JFXPasswordField fx:id="password" layoutX="60.0" layoutY="212.0" prefHeight="38.0" prefWidth="218.0" promptText="Password" style="-fx-text-fill: #b5b2b2;" unFocusColor="#ddd6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXPasswordField>
+            <JFXButton buttonType="RAISED" layoutX="86.0" layoutY="307.0" onAction="#login" prefHeight="14.0" prefWidth="148.0" ripplerFill="#bfb8b8" style="-fx-background-color: #434242;" text="Login" textFill="#b2aeae" textOverrun="CLIP">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+            </JFXButton>
+            <JFXTextField fx:id="username" layoutX="60.0" layoutY="152.0" prefHeight="38.0" prefWidth="218.0" promptText="Username" style="-fx-text-fill: #b5b2b2;" unFocusColor="#dad6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXButton layoutX="58.0" layoutY="375.0" onAction="#MoveToSignup" ripplerFill="BLACK" text="Don't have an account?    Register here" textFill="#8d8d8d" underline="true">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
+            <ImageView layoutX="28.0" layoutY="167.0">
+               <image>
+                  <Image url="@Icons/icons8_customer_20px.png" />
+               </image>
+            </ImageView>
+            <ImageView layoutX="28.0" layoutY="227.0">
+               <image>
+                  <Image url="@Icons/icons8_lock_20px.png" />
+               </image>
+            </ImageView>
+         </children></AnchorPane>
+   </children>
+</AnchorPane>

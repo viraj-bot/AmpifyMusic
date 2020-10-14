@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="loginPanel" fx:id="rootPane" prefHeight="463.0" prefWidth="624.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.SignUpController">
+    <opaqueInsets>
+        <Insets />
+    </opaqueInsets>
+   <children>
+      <AnchorPane prefHeight="463.0" prefWidth="310.0">
+         <children>
+            <ImageView fitHeight="463.0" fitWidth="310.0" opacity="0.7">
+               <image>
+                  <Image url="@Icons/MusicBack2.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <ImageView fitHeight="60.0" fitWidth="63.0" layoutX="123.0" layoutY="174.0">
+         <image>
+            <Image url="@Icons/appIcon.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="91.0" layoutY="242.0" text="Ampify Music" textFill="WHITE">
+         <font>
+            <Font name="Calibri" size="24.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="310.0" prefHeight="463.0" prefWidth="320.0" style="-fx-background-color: linear-gradient(to left, #050003, #0c090c, #121112, #171617, #1b1b1b, #1e1e1e, #222222, #252525, #282828, #2c2c2c, #2f2f2f, #333333);">
+         <children>
+            <Label layoutX="24.0" layoutY="32.0" text="Sign Up" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="22.0" />
+               </font>
+            </Label>
+            <JFXPasswordField fx:id="password" layoutX="35.0" layoutY="245.0" prefHeight="38.0" prefWidth="255.0" promptText="Password" style="-fx-text-fill: #b5b2b2;" unFocusColor="#ddd6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXPasswordField>
+            <JFXButton buttonType="RAISED" layoutX="86.0" layoutY="366.0" onAction="#signup" prefHeight="14.0" prefWidth="148.0" ripplerFill="#bfb8b8" style="-fx-background-color: #434242;" text="Sign Up" textFill="#b2aeae" textOverrun="CLIP">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+            </JFXButton>
+            <JFXTextField fx:id="FirstName" layoutX="35.0" layoutY="94.0" prefHeight="38.0" prefWidth="122.0" promptText="First Name" style="-fx-text-fill: #b5b2b2;" unFocusColor="#dad6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXButton layoutX="58.0" layoutY="421.0" onAction="#MoveToSLogin" ripplerFill="BLACK" text="Already have an account?    Login here" textFill="#8d8d8d" underline="true">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
+            <JFXTextField fx:id="username" layoutX="35.0" layoutY="147.0" prefHeight="38.0" prefWidth="255.0" promptText="Username" style="-fx-text-fill: #b5b2b2;" unFocusColor="#dad6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="LastName" layoutX="164.0" layoutY="94.0" prefHeight="38.0" prefWidth="122.0" promptText="Last Name" style="-fx-text-fill: #b5b2b2;" unFocusColor="#dad6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="Email" layoutX="35.0" layoutY="195.0" prefHeight="38.0" prefWidth="255.0" promptText="E-mail Id" style="-fx-text-fill: #b5b2b2;" unFocusColor="#dad6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXTextField>
+            <JFXPasswordField fx:id="cPassword" layoutX="37.0" layoutY="295.0" prefHeight="38.0" prefWidth="255.0" promptText="Confirm Password" style="-fx-text-fill: #b5b2b2;" unFocusColor="#ddd6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXPasswordField>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

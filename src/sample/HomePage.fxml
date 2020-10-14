@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.HomeController">
+   <children>
+      <AnchorPane fx:id="mediaViewPanel" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MediaView fx:id="mediaView" fitHeight="720.0" fitWidth="1280.0" preserveRatio="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="sidePanel" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="180.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1110.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="22.0" layoutY="167.0" text="YOUR LIBRARY" textFill="#dddddd">
+               <font>
+                  <Font name="Calibri" size="16.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="homeButton" layoutX="34.0" layoutY="58.0" prefHeight="17.0" prefWidth="84.0" ripplerFill="#757272" text="Home" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="18.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="historyButton" layoutX="33.0" layoutY="98.0" prefHeight="42.0" prefWidth="95.0" ripplerFill="#757272" text="History" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="18.0" />
+               </font>
+            </JFXButton>
+            <JFXButton layoutX="-3.0" layoutY="188.0" prefHeight="42.0" prefWidth="117.0" ripplerFill="#757272" text="--   Artists" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="16.0" />
+               </font>
+            </JFXButton>
+            <JFXButton layoutX="-4.0" layoutY="223.0" prefHeight="42.0" prefWidth="124.0" ripplerFill="#757272" text="--   Genres" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="16.0" />
+               </font>
+            </JFXButton>
+            <JFXButton layoutX="-9.0" layoutY="258.0" prefHeight="42.0" prefWidth="155.0" ripplerFill="#757272" text="--   Languages" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="16.0" />
+               </font>
+            </JFXButton>
+            <JFXButton layoutX="-8.0" layoutY="293.0" prefHeight="42.0" prefWidth="163.0" ripplerFill="#757272" text="--   Liked Songs" textFill="WHITE">
+               <font>
+                  <Font name="Calibri" size="16.0" />
+               </font>
+            </JFXButton>
+            <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="18.0" layoutY="61.0">
+               <image>
+                  <Image url="@Icons/home.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="25.0" fitWidth="25.0" layoutX="18.0" layoutY="107.0">
+               <image>
+                  <Image url="@Icons/history.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="27.0" layoutY="365.0" text="PLAYSISTS" textFill="#dddddd">
+               <font>
+                  <Font name="Calibri" size="16.0" />
+               </font>
+            </Label>
+            <JFXListView fx:id="playlistNameListView" fixedCellSize="0.0" layoutX="18.0" layoutY="383.0" prefHeight="256.0" prefWidth="163.0" style="-fx-background-color: black;" stylesheets="@style.css" AnchorPane.bottomAnchor="50.0" AnchorPane.topAnchor="384.0">
+               <styleClass>
+                  <String fx:value="list-cell2" />
+                  <String fx:value="scroll-bar" />
+               </styleClass>
+            </JFXListView>
+            <JFXButton layoutX="4.0" layoutY="600.0" onMouseClicked="#createPlaylist" prefHeight="48.0" prefWidth="173.0" text="New Playlist" textFill="#dadada" AnchorPane.bottomAnchor="0.0">
+               <font>
+                  <Font name="Calibri" size="18.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="32.0">
+                     <image>
+                        <Image url="@Icons/addIcons.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <Separator layoutY="592.0" opacity="0.3" prefWidth="180.0" AnchorPane.bottomAnchor="44.0" />
+         </children></AnchorPane>
+      <AnchorPane fx:id="rootPanel" layoutX="181.0" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox fx:id="createPlaylistHbox" alignment="CENTER" layoutX="-1.0" layoutY="-2.0" prefHeight="640.0" prefWidth="1110.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane fx:id="createPlaylistPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="379.0" style="-fx-background-color: #424242; -fx-background-radius: 15;">
+                     <children>
+                        <JFXTextField fx:id="createPlaylistTextField" focusColor="#1db954" layoutX="18.0" layoutY="110.0" prefHeight="46.0" prefWidth="339.0" promptText="Enter playlist name" style="-fx-text-fill: #dddddd; -fx-prompt-text-fill: #a4a4a4;" unFocusColor="BLACK">
+                           <font>
+                              <Font name="Calibri" size="18.0" />
+                           </font>
+                        </JFXTextField>
+                        <Label alignment="CENTER" layoutX="-2.0" layoutY="31.0" prefHeight="26.0" prefWidth="379.0" text="Create Playlist" textFill="#dddddd">
+                           <font>
+                              <Font name="Calibri Bold" size="22.0" />
+                           </font>
+                        </Label>
+                        <JFXButton fx:id="createPlaylistButton" layoutX="122.0" layoutY="229.0" prefHeight="37.0" prefWidth="124.0" style="-fx-background-color: #1db954; -fx-background-radius: 30;" text="CREATE" textFill="#dddddd">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </JFXButton>
+                        <JFXButton fx:id="createPlaylistcloseButton" contentDisplay="CENTER" layoutX="328.0" layoutY="4.0" onMouseClicked="#OnCreatePlaylistcloseButtonPressed" prefHeight="32.0" prefWidth="49.0" ripplerFill="BLACK" text=" ">
+                           <graphic>
+                              <ImageView fitHeight="26.0" fitWidth="25.0">
+                                 <image>
+                                    <Image url="@Icons/icons8_delete_20px.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                        <Label fx:id="warningLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="77.0" layoutY="166.0" prefHeight="21.0" prefWidth="241.0" textFill="#e40000" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+            <AnchorPane fx:id="libraryPane" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <VBox fx:id="libraryPaneVbox" prefHeight="640.0" prefWidth="1100.0" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="77.0" prefWidth="129.0" text="Library" textFill="#f8f8f8">
+                           <font>
+                              <Font name="Calibri" size="30.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <ScrollPane fx:id="playlistsScrollPane" hbarPolicy="NEVER" prefHeight="554.0" prefWidth="1068.0" styleClass="scroll_pane" stylesheets="@style.css" vbarPolicy="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="playlistPane" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <VBox fx:id="playlistPaneVbox" prefHeight="640.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" prefHeight="27.0" prefWidth="122.0" text="PLAYLIST" textFill="#fcfcfc">
+                           <font>
+                              <Font name="Calibri" size="24.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="15.0" top="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="playlistNameLabel" alignment="TOP_LEFT" prefHeight="34.0" prefWidth="1082.0" textFill="#fffbfb">
+                           <font>
+                              <Font name="Calibri" size="24.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="13.0" top="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="totalSongNumber" alignment="TOP_LEFT" prefHeight="54.0" prefWidth="311.0" textFill="#e8e4e4">
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox>
+                           <VBox.margin>
+                              <Insets left="12.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label prefHeight="38.0" prefWidth="927.0" text="Song Name " textFill="#a8a8a8">
+                                 <font>
+                                    <Font name="Calibri" size="16.0" />
+                                 </font></Label>
+                              <JFXButton ripplerFill="#1b1b1b">
+                                 <graphic>
+                                    <ImageView fx:id="importButton" fitHeight="24.0" fitWidth="21.0">
+                                       <image>
+                                          <Image url="@Icons/import.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="deletePlaylistButton" ripplerFill="#111111">
+                                 <graphic>
+                                    <ImageView fitHeight="24.0" fitWidth="22.0">
+                                       <image>
+                                          <Image url="@Icons/delete.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton>
+                                 <graphic>
+                                    <ImageView fx:id="playSongsFromCurrentPlaylistButton" fitHeight="26.0" fitWidth="18.0">
+                                       <image>
+                                          <Image url="@Icons/playall.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                        <JFXListView fx:id="playlistListView" prefHeight="468.0" prefWidth="1100.0" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636); -fx-text-fill: white;" stylesheets="@style.css">
+                           <styleClass>
+                              <String fx:value="list-cell" />
+                              <String fx:value="list-view" />
+                           </styleClass></JFXListView>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </children></AnchorPane>
+      <AnchorPane fx:id="playerControl" layoutY="646.0" maxHeight="165.0" maxWidth="1920.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="1280.0" style="-fx-background-color: #242424;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <JFXSlider fx:id="progressBar" layoutX="317.0" layoutY="75.0" majorTickUnit="1.0" minorTickCount="0" prefHeight="18.0" prefWidth="646.0" AnchorPane.leftAnchor="317.0" AnchorPane.rightAnchor="317.0" AnchorPane.topAnchor="55.0" />
+            <JFXSlider fx:id="volumeSlider" layoutX="1132.0" layoutY="35.0" prefHeight="18.0" prefWidth="141.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="18.0" />
+            <Label fx:id="currentTime" layoutX="279.0" layoutY="49.0" prefHeight="28.0" prefWidth="61.0" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="279.0" AnchorPane.topAnchor="49.0">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font></Label>
+            <Label fx:id="trackLength" layoutX="980.0" layoutY="48.0" prefHeight="28.0" prefWidth="61.0" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="239.0" AnchorPane.topAnchor="48.0">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font>
+            </Label>
+            <JFXButton layoutX="1032.0" layoutY="28.0" prefHeight="31.0" prefWidth="25.0" AnchorPane.rightAnchor="145.0" AnchorPane.topAnchor="10.0">
+               <graphic>
+                  <ImageView fx:id="volumeImage" fitHeight="22.0" fitWidth="20.0">
+                     <image>
+                        <Image url="@Icons/icons8_audio_24px.png" />
+                     </image>
+                  </ImageView>
+               </graphic></JFXButton>
+            <JFXButton fx:id="openButton" layoutX="1047.0" layoutY="29.0" onMouseClicked="#openSong" text=" " AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="12.0">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0">
+                     <image>
+                        <Image url="@Icons/icons8_opened_folder_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic></JFXButton>
+            <JFXButton fx:id="stopButton" layoutX="981.0" layoutY="28.0" onMouseClicked="#stop" prefHeight="18.0" prefWidth="25.0" text=" " AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="12.0">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="15.0">
+                     <image>
+                        <Image url="@Icons/stopIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic></JFXButton>
+            <Label fx:id="songName" prefHeight="110.0" prefWidth="230.0" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="Calibri Bold" size="14.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" layoutX="441.0" layoutY="4.0" prefHeight="32.0" prefWidth="336.0" spacing="20.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="472.0">
+               <children>
+                  <JFXButton fx:id="shuffleButton" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@Icons/icons8_shuffle_25px_1.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="previousButton" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@Icons/icons8_skip_to_start_25px_1.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <VBox prefHeight="50.0" prefWidth="44.0">
+                     <children>
+                        <JFXButton fx:id="playButton" onMouseClicked="#playpause" prefHeight="40.0" prefWidth="54.0" text=" ">
+                           <graphic>
+                              <ImageView fx:id="playImage" fitHeight="40.0" fitWidth="40.0">
+                                 <image>
+                                    <Image url="@Icons/playIcon.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+                  <JFXButton fx:id="nextSong" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@Icons/icons8_end_25px_1.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="repeatButton" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@Icons/icons8_repeat_25px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
