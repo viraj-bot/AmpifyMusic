@@ -65,101 +65,84 @@ class LoginHandler extends Thread // handling each new client
         this.dos = dos;
     }
 
-    public void run() {
+    public void run()
+    {
+        int n = 0;                  //to check how many data input data string is coming from client
+        String[] a = new String[10]; // making an array of string of size 5
+        String str;                 //a string that will  take data from inputstream and check is it an empty string
         try {
-                int n = 0;                  //to check how many data input data string is coming from client
-                String[] a = new String[10]; // making an array of string of size 5
-                String str;                 //a string that will  take data from inputstream and check is it an empty string
-                try {
-                 while (!"".equals(str = dis.readUTF())) // running loop until str gets ""
-                    {
-                         a[n] = str;
-                         n++;
-                        System.out.println(" n = " + n);
-                        System.out.println(str);
-                  }
-             } catch (IOException ex) {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-             }
-             if("1".equals(a[0]))
-             {
-              System.out.println("Hey there");
-                String p = a[2];       //to convert a string password to int type password
-               String Verify_user, Verify_password;
-              Verify_user = "select * from userdata where username = '" + a[1] + "'";//query to verify username
-              Verify_password = "select * from userdata where password = '" + p + "'";//query to verify password
-              Database_Connection ob1 = new Database_Connection();                // to load driver class and making c
-                try {
-                 Statement stat1 = ob1.getStat();                              //to prepare a statement for equecuting query
-                    ResultSet rs_pass = stat1.executeQuery(Verify_password);//executing the query and storing in resultset
-                    Database_Connection ob2 = new Database_Connection();
-                    Statement stat2 = ob2.getStat();
-                    ResultSet rs_user = stat2.executeQuery(Verify_user);
-                if (rs_user.next() == true) // if username  matches
+            while (!"".equals(str = dis.readUTF())) // running loop until str gets ""
+            {
+                a[n] = str;
+                n++;
+                System.out.println(" n = " + n);
+                System.out.println(str);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("Hey there");
+        String p = a[1];       //to convert a string password to int type password
+        String Verify_user, Verify_password;
+        Verify_user = "select * from user where username = '" + a[0] + "'";//query to verify username
+        Verify_password = "select * from user where password = '" + p + "'";//query to verify password
+        Database_Connection ob1 = new Database_Connection();                // to load driver class and making c
+        try {
+            System.out.println("here1");
+            Statement stat1 = ob1.getStat();                              //to prepare a statement for equecuting query
+            System.out.println("here2");
+            ResultSet rs_pass = stat1.executeQuery(Verify_password);//executing the query and storing in resultset
+            System.out.println("here3");
+            Database_Connection ob2 = new Database_Connection();
+            System.out.println("here4");
+            Statement stat2 = ob2.getStat();
+            System.out.println("here5");
+            ResultSet rs_user = stat2.executeQuery(Verify_user);
+            System.out.println("here6");
+            if (rs_user.next() == true) // if username  matches
+            {
+                System.out.println("here3");
+                if (n == 2) //
                 {
-                    System.out.println("here3");
-                    if (n == 3) //
+                    System.out.println("here4");
+                    if (rs_pass.next())// if password matches
                     {
-                        System.out.println("here4");
-                        if (rs_pass.next())// if password matches
-                        {
-                            System.out.println("here4.1");
-                            System.out.println("Logged In sucessfully : ");
-                            dos.writeBytes("true");
-                        } else {
-                            System.out.println("Logged In failed password is Incorrect");
-                            dos.writeBytes("false");
-                        }
-                    } else if (n == 6) {
-                        System.out.println("User Already exists");
-                        dos.writeBytes("false");
+                        System.out.println("here4.1");
+                        System.out.println("Logged In sucessfully : ");
+                        dos.writeUTF("true");
+                        HomeHandle hm = new HomeHandle(this.dis, this.dos, a[0]);
+                    } else {
+                        System.out.println("Logged In failed password is Incorrect");
+                        dos.writeUTF("false");
                     }
+                } else if (n == 5) {
+                    System.out.println("User Already exists");
+                    dos.writeBytes("false");
+                }
 
-                } else if (rs_user.next() == false) {
-                    if (n == 3) {
-                        System.out.println("Login failed : Incorrect user name");
+            } else if (rs_user.next() == false) {
+                if (n == 2) {
+                    System.out.println("Login failed : Incorrect user name");
+                    dos.writeBytes("false");
+                } else if (n == 5) {
+                    String Insert_Query = "Insert into userdata values('" + a[0] + "','" + p + "' ,'" + a[2] + "','" + a[3] + "','" + a[4] + "' )";
+                    Database_Connection ob3 = new Database_Connection();
+                    Statement stat3 = ob3.getStat();
+                    int Ex = stat3.executeUpdate(Insert_Query);
+                    if (Ex == 0) {
+                        System.out.println("User not registered");
                         dos.writeBytes("false");
-                    } else if (n == 6) {
-                        String Insert_Query = "Insert into userdata values('" + a[1] + "','" + p + "' ,'" + a[3] + "','" + a[4] + "','" + a[5] + "' )";
-                        Database_Connection ob3 = new Database_Connection();
-                        Statement stat3 = ob3.getStat();
-                        int Ex = stat3.executeUpdate(Insert_Query);
-                        if (Ex == 0) {
-                            System.out.println("User not registered");
-                            dos.writeBytes("false");
-                        } else {
-                            System.out.println("User registered Successful");
-                            dos.writeBytes("true");
-                        }
+                    } else {
+                        System.out.println("User registered Successful");
+                        dos.writeBytes("true");
+                        HomeHandle hm = new HomeHandle(this.dis, this.dos, a[0]);
                     }
                 }
-            } catch (SQLException ex) {
-//                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("SQL Exception");
             }
-            this.dis.close();
-            this.dos.close();
+        } catch (SQLException | IOException ex) {
+            System.out.println("SQL Exception");
         }
-
-        // elseif()
-
-
-
-
-
-
-
-
-
-
-        } catch (Exception e) {
-             System.out.println("cannot read choice");
-        }
-
     }
-
-
-
 }
 
 
