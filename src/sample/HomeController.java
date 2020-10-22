@@ -1,19 +1,15 @@
-package sample;
+package client;
 
 import com.jfoenix.controls.*;
-import javafx.application.Platform;
+import com.jfoenix.validation.RegexValidator;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.CacheHint;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.fxml.Initializable;
@@ -22,14 +18,11 @@ import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaView;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List ;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,8 +30,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class HomeController implements Initializable {
-    // HashMap<String,ArrayList<HashMap<String,Object>>> cachedPlaylist = new HashMap<>();
-    String currentPlaylist = "";
+    String currentPlaylist , currentlyPlayingPlaylist , currentSong , currentUser;
     FileChooser fileChooser = new FileChooser();
     private MediaPlayer mediaPlayer;
     int trackNo = 0;
@@ -46,15 +38,22 @@ public class HomeController implements Initializable {
     private File file;
     private ObservableList<String> list = FXCollections.observableArrayList();
     private List<File> fileList;
-    private HashMap<String , List<File>> playlists = new HashMap<>();
-    private ObservableList<String> listOfSongsInPlaylist = FXCollections.observableArrayList();
+   // private HashMap<String , List<File>> playlists = new HashMap<>();
     int currentSelectedPane=3;
-    private ObservableList<String> playlistNames = FXCollections.observableArrayList();
+    private ObservableList<String> playlistNames = FXCollections.observableArrayList();   //to store the names of playlists locally
+    private ObservableList<String> queue = FXCollections.observableArrayList();
+    private ObservableList<String> listOfSongsInPlaylist = FXCollections.observableArrayList();
+
+
 
     @FXML
     private AnchorPane mediaViewPanel;
     @FXML
     private Label totalSongNumber;
+    @FXML
+    private Label libraryNameLabel;
+    @FXML
+    private HBox selectPlaylistHbox;
     @FXML
     private JFXListView<String> playlistNameListView;
     @FXML
@@ -64,7 +63,13 @@ public class HomeController implements Initializable {
     @FXML
     private AnchorPane rootPanel;
     @FXML
+    private AnchorPane homePagePane;
+    @FXML
     private AnchorPane playlistPane;
+    @FXML
+    private AnchorPane lyricsPane;
+    @FXML
+    private AnchorPane queuePane;
     @FXML
     private VBox playlistPaneVbox;
     @FXML
@@ -92,6 +97,8 @@ public class HomeController implements Initializable {
     @FXML
     private JFXSlider volumeSlider;
     @FXML
+    private JFXListView queueListView;
+    @FXML
     private Label currentTime;
     @FXML
     private Label trackLength;
@@ -101,6 +108,8 @@ public class HomeController implements Initializable {
     private JFXButton openButton;
     @FXML
     private JFXButton stopButton;
+    @FXML
+    private JFXButton playlistPlayButton;
     @FXML
     private Label songName;
     @FXML
@@ -121,11 +130,19 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        homePagePane.toFront();
+        progressBar.setValue(0);
+        playlistListView.setDisable(true);
+        if(LoginController.getCurrentUser().equals(null))
+            currentUser = SignUpController.getCurrentUser();
+        else
+            currentUser = LoginController.getCurrentUser();
+       loadPlaylists();
         playlistNameListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                playlistNames.get(playlistNameListView.getSelectionModel().getSelectedIndex());
-                showPlaylist(playlistNameListView.getSelectionModel().getSelectedIndex());
+                //currentPlaylist = playlistNames.get(playlistNameListView.getSelectionModel().getSelectedIndex());
+               showPlaylist(playlistNameListView.getSelectionModel().getSelectedIndex());
             }
         });
     }
@@ -182,11 +199,10 @@ public class HomeController implements Initializable {
     }
 
 
-    void handlePlay(File f) {
-        String fileName, path, fileExtension;
-        path = f.toURI().toString();
+    void handlePlay(String path) {
+        String fileExtension;
         Media media = new Media(path);
-        System.out.println(""+path);
+        System.out.println("path:"+path);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
         try {
@@ -195,10 +211,10 @@ public class HomeController implements Initializable {
             e.printStackTrace();
         }
         status=true;
-        fileName = f.getName();
-        songName.setText("Now Playing-\n" + fileName);
+        songName.setText("Now Playing-\n" + currentSong);
         progressBar.setValue(0.0);
-        fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, file.getName().length());
+        fileExtension = path.substring(path.lastIndexOf(".") + 1, currentSong.length());
+        System.out.println("fileExtension" + fileExtension);
         if (fileExtension.equals("mp4")) {
             mediaView.setMediaPlayer(mediaPlayer);
             DoubleProperty widthProp = mediaView.fitWidthProperty();
@@ -251,13 +267,10 @@ public class HomeController implements Initializable {
             mediaPlayer.stop();
         }
         try {
-            trackNo = index;
-            file = fileList.get(trackNo);
+
+
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (file != null) {
-            handlePlay(file);
         }
     }//jumpTrack() method closed here
 
@@ -286,7 +299,7 @@ public class HomeController implements Initializable {
         });
     }//openFile() method closed here
 
-    public void createPlaylist(){
+   public void createPlaylist(){
       createPlaylistHbox.toFront();
       createPlaylistTextField.setText(null);
       warningLabel.setText(null);
@@ -296,55 +309,170 @@ public class HomeController implements Initializable {
                 if (createPlaylistTextField.getText().isEmpty() || createPlaylistTextField.getText().isBlank()) {
                     warningLabel.setText("Playlist name cannot be empty");
                 }
-                else if (playlists.containsKey(createPlaylistTextField.getText())) {
+                else if (playlistNames.contains(createPlaylistTextField.getText())) {
                     warningLabel.setText("Playlist name already taken");
                 }
                 else {
-                    playlists.put(createPlaylistTextField.getText(), null);
                     playlistNames.add(createPlaylistTextField.getText());
+                   try{
+                       Main.clientOutputStream.writeUTF("CreatePlaylist");
+                       AppData createPlaylistData = new AppData(currentUser , createPlaylistTextField.getText());
+                       Main.clientOutputStream.writeObject(createPlaylistData);
+                   }catch(Exception e){
+                       e.printStackTrace();
+                       System.out.println("Playlist not created ERROR!");
+                   }
+                   playlistListView.setItems(null);
+                   currentPlaylist = createPlaylistTextField.getText();
                     createPlaylistHbox.toBack();
                     playlistPane.toFront();
                     playlistNameLabel.setText(createPlaylistTextField.getText());
-                    totalSongNumber.setText("it is lonely here");
+                    totalSongNumber.setText("it is lonely here!");
                     playlistNameListView.setItems(playlistNames);
                 }
             }
       });
-    }
+    }//CreatePlaylist method ends here
 
     public void loadPlaylists(){
+        try{
+            Main.clientOutputStream.writeUTF("loadPlaylists");
+            System.out.println("Sending username to server to get playlist names");
+            AppData loadPlaylistData = new AppData(currentUser);
+            Main.clientOutputStream.writeObject(loadPlaylistData);
+            System.out.println("reading playlist names from server");
+            String playlistName;
+            while (!"".equals(playlistName = Main.clientInputStream.readUTF())){
+                System.out.println("playlist Name : "+ playlistName);
+                playlistNames.add(playlistName);
+            }
+            playlistNameListView.setItems(playlistNames);
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Error loading playlists");
+        }
 
-    }
+    }//loadPlaylists method ends here
 
 
     public void OnCreatePlaylistcloseButtonPressed(){
         createPlaylistHbox.toBack();
     }
 
+    public void onAddPlaylistcloseButtonPressed(){
+        selectPlaylistHbox.toBack();
+    }
+
+    public void addToPlaylistMenuButtonPressed(){
+        selectPlaylistHbox.toFront();
+    }
 
     public void showPlaylist(int i){
-        List<File> playlistFiles ;
-        currentPlaylist = playlistNames.get(i);
-        playlistNameLabel.setText(currentPlaylist);
-        playlistFiles = playlists.get(currentPlaylist) ;
-        if(playlistFiles==null)
+        listOfSongsInPlaylist.clear();
+        playlistListView.setDisable(false);
+        playlistPane.toFront();
+        if(currentPlaylist != playlistNames.get(i))
         {
-            totalSongNumber.setText("It is lonely here");
-        }
-        else {
-            for (File value : playlistFiles) {
-                listOfSongsInPlaylist.add(value.getName());
-            }
-            totalSongNumber.setText("" + playlistFiles.size());
-            playlistListView.setItems(listOfSongsInPlaylist);
-            playlistListView.getSelectionModel().select(0);
-            playlistListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    jumpTrack(playlistListView.getSelectionModel().getSelectedIndex());
+            currentPlaylist = playlistNames.get(i);
+            playlistNameLabel.setText(currentPlaylist);
+            try {
+                Main.clientOutputStream.writeUTF("showPlaylist");
+                AppData showPlaylistData = new AppData(currentUser , currentPlaylist);
+                Main.clientOutputStream.writeObject(showPlaylistData);
+                System.out.println("Reading list of songs in playlist from server");
+                String songName;
+                while (!"".equals(songName = Main.clientInputStream.readUTF())){
+                    System.out.println("Song Name : "+ songName);
+                    listOfSongsInPlaylist.add(songName);
                 }
-            });
+                if(listOfSongsInPlaylist.size()>0)
+                    totalSongNumber.setText("Number of songs : " + listOfSongsInPlaylist.size());
+                else
+                    totalSongNumber.setText("It is lonely here!");
+                playlistListView.setItems(listOfSongsInPlaylist);
+                playlistListView.getSelectionModel().select(0);
+                playlistListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        jumpTrack(playlistListView.getSelectionModel().getSelectedIndex());
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Unable to open playlist");
+            }
         }
+    }//showPlaylists method ends here
+
+   public void deletePlaylist(){
+       try {
+           Main.clientOutputStream.writeUTF("deletePlaylist");
+           AppData deletePlaylist = new AppData(currentUser , currentPlaylist);
+           Main.clientOutputStream.writeObject(deletePlaylist);
+           System.out.println("delete data sent successfully");
+           playlistNames.remove(currentPlaylist);
+           homePagePane.toFront();
+       }catch(Exception e){
+           e.printStackTrace();
+           System.out.println("error deleting playlist");
+       }
+   }
+
+    public void clearQueueButtonPressed(){
+        queue.clear();
+    }
+
+    public void playlistPlayButtonPressed(){
+        System.out.println("list of songs" + listOfSongsInPlaylist);
+        queue.clear();
+        queue.addAll(listOfSongsInPlaylist) ;
+       currentlyPlayingPlaylist = currentPlaylist ;
+       playlistListView.getSelectionModel().select(0);
+       jumpTrack(0);
+        System.out.println("queue:"+ queue);
+    }
+
+    public void homeButtonPressed(){
+        homePagePane.toFront();
+    }
+    public void queueButtonPressed(){
+        queuePane.toFront();
+        queueListView.setItems(queue);
+    }
+
+    public void artistButtonPressed() {
+        libraryPane.toFront();
+        libraryNameLabel.setText("Artists");
+        try {
+            Main.clientOutputStream.writeUTF("getArtistData");
+
+        }catch(Exception e){
+            System.out.println("Error geting artist data");
+        }
+    }
+
+    public void genreButtonPressed(){
+        libraryPane.toFront();
+        libraryNameLabel.setText("Genres");
+    }
+
+    public void languagesButtonPressed(){
+        libraryPane.toFront();
+        libraryNameLabel.setText("Languages");
+    }
+
+    public void likedSongsButtonPressed(){
+        libraryPane.toFront();
+        libraryNameLabel.setText("Liked Songs");
+    }
+
+    public void historyButtonPressed(){
+        libraryPane.toFront();
+        libraryNameLabel.setText("Recently Played");
+    }
+
+    public void lyricsButtonPressed(){
+        lyricsPane.toFront();
     }
 
 
