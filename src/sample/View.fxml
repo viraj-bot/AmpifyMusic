@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXSlider?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.media.MediaView?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Test2">
+   <children>
+      <MediaView fx:id="mediaView" fitHeight="200.0" fitWidth="200.0" layoutX="166.0" layoutY="100.0" />
+      <JFXTextField fx:id="lyricshere" layoutX="28.0" layoutY="361.0" prefHeight="56.0" prefWidth="623.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <AnchorPane prefHeight="319.0" prefWidth="600.0">
+         <children>
+            <JFXButton fx:id="ONOFF" layoutX="252.0" layoutY="271.0" onMouseClicked="#OnOff" prefHeight="25.0" prefWidth="103.0" text="ON" textFill="#ff1212" />
+            <JFXSlider fx:id="band0" layoutX="17.0" layoutY="122.0" rotate="270.0" />
+            <JFXSlider fx:id="band3" layoutX="175.0" layoutY="122.0" prefHeight="14.0" prefWidth="140.0" rotate="270.0" />
+            <JFXSlider fx:id="band5" layoutX="278.0" layoutY="122.0" rotate="270.0" />
+            <JFXSlider fx:id="band2" layoutX="120.0" layoutY="122.0" rotate="270.0" />
+            <JFXSlider fx:id="band6" layoutX="323.0" layoutY="122.0" rotate="270.0" />
+            <JFXSlider fx:id="band4" layoutX="227.0" layoutY="122.0" rotate="270.0" />
+            <JFXSlider fx:id="band1" layoutX="69.0" layoutY="122.0" rotate="270.0" />
+            <JFXSlider fx:id="band7" layoutX="365.0" layoutY="122.0" rotate="270.0" />
+            <JFXSlider fx:id="band8" layoutX="408.0" layoutY="122.0" rotate="270.0" />
+            <JFXSlider fx:id="band9" layoutX="447.0" layoutY="122.0" rotate="270.0" />
+            <Label layoutX="22.0" layoutY="59.0" prefHeight="25.0" prefWidth="53.0" text="+12 db" />
+            <Label layoutX="26.0" layoutY="120.0" prefHeight="17.0" prefWidth="46.0" text="  0 db" />
+            <Label layoutX="26.0" layoutY="181.0" prefHeight="17.0" prefWidth="46.0" text="-12 db" />
+            <Label layoutX="123.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text="64 Hz" />
+            <Label layoutX="64.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text="32 Hz" />
+            <Label layoutX="167.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text=" 125 Hz" />
+            <Label layoutX="222.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text=" 250 Hz" />
+            <Label layoutX="274.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text=" 500 Hz" />
+            <Label layoutX="325.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text=" 1k Hz" />
+            <Label layoutX="370.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text=" 2k Hz" />
+            <Label layoutX="412.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text=" 4k Hz" />
+            <Label layoutX="455.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text=" 8k Hz" />
+            <Label layoutX="494.0" layoutY="213.0" prefHeight="17.0" prefWidth="46.0" text=" 16k Hz" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
