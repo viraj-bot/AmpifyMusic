@@ -14,6 +14,8 @@ import static java.lang.System.out;
 
 import java.net.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -149,12 +151,12 @@ class LoginHandler extends Thread                                               
           while(true) {
 
                System.out.println("entered while loop");
-               String queryType = input_Stream.readUTF();
                AppData appData ;
                appData = (AppData)input_Stream.readObject();
-               ObservableList<String> listOfData = FXCollections.observableArrayList();
+               System.out.println(appData.getQueryType());
+               //ObservableList<String> listOfData = FXCollections.observableArrayList();
 
-              if (queryType.equals("CreatePlaylist")) {
+              if (appData.getQueryType().equals("CreatePlaylist")) {
                    System.out.println("adding playlist to database");
 
                    String query = "insert into playlists values('" + appData.getUserName() + "','" + appData.getPlaylistName() + "' )";
@@ -167,7 +169,15 @@ class LoginHandler extends Thread                                               
                        System.out.println("playlist successfully added to the database");
                }
 
-               else if (queryType.equals("loadPlaylists")) {
+              else if(appData.getQueryType().equals("playSong")){
+                  out.println("entered playSong");
+                  String songname =  appData.getUserName();
+                  File mp3 = new File("/D:/Ampify/" + songname + ".mp3").getCanonicalFile();
+                  byte[] arr = Files.readAllBytes(Paths.get(mp3.toURI()));
+                  output_Stream.write(arr);
+              }
+
+               else if (appData.getQueryType().equals("loadPlaylists")) {
                    System.out.println("Loading playlists from server");
                    String query = "select playlistname from playlists where username = '" + appData.getUserName() + "'";
                    try {
@@ -186,7 +196,7 @@ class LoginHandler extends Thread                                               
                    }
                }
 
-               else if (queryType.equals("showPlaylist")) {
+               else if (appData.getQueryType().equals("showPlaylist")) {
                    System.out.println("Loading songs in playlists from server");
                    String query = "select songname from songsinplaylists where username = '" + appData.getUserName() + "' and playlistname = '" + appData.getPlaylistName() + "'";
                    try {
@@ -205,7 +215,7 @@ class LoginHandler extends Thread                                               
                    }
                }
 
-               else if (queryType.equals("deletePlaylist")) {
+               else if (appData.getQueryType().equals("deletePlaylist")) {
                    System.out.println("Deleting playlist from server");
                    String query = "delete from songsinplaylists where username = '" + appData.getUserName() + "' and playlistname = '" + appData.getPlaylistName() + "'";
                    String query2 = "delete from playlists where username = '" + appData.getUserName() + "' and playlistname = '" + appData.getPlaylistName() + "'";
@@ -222,29 +232,91 @@ class LoginHandler extends Thread                                               
                    }
                }
 
-                else if(queryType.equals("getArtistData")){
+                else if(appData.getQueryType().equals("getArtistData")){
+                  System.out.println("artist function server side");
                   System.out.println("Loading artists from server");
-                  String query = "select songname from songsinplaylists where username = '" + appData.getUserName() + "' and playlistname = '" + appData.getPlaylistName() + "'";
+                  String query = "select distinct artist from allsongs order by artist asc ";
                   try {
                       Database_Connection con = new Database_Connection();
                       Statement stat = con.getStat();
                       ResultSet rs = stat.executeQuery(query);
-                      System.out.println("Sending songs in playlist to client");
+                      System.out.println("Sending artist data to client");
                       while (rs.next()) {
-                          System.out.println(rs.getString("songname"));
-                          output_Stream.writeUTF(rs.getString("songname"));
+                          System.out.println(rs.getString("artist"));
+                          output_Stream.writeUTF(rs.getString("artist"));
                       }
                       output_Stream.writeUTF("");
-                      System.out.println("Songs in playlist sent succesfully");
+                      System.out.println("Artist data sent succesfully");
                   } catch (Exception e) {
-                      System.out.println("Error sending songs in playlist from server");
+                      System.out.println("Error sending Artist data from server");
+                  }
+              }
+
+              else if(appData.getQueryType().equals("getLanguageData")){
+                  System.out.println("artist function server side");
+                  System.out.println("Loading artists from server");
+                  String query = "select distinct language from allsongs order by language asc ";
+                  try {
+                      Database_Connection con = new Database_Connection();
+                      Statement stat = con.getStat();
+                      ResultSet rs = stat.executeQuery(query);
+                      System.out.println("Sending artist data to client");
+                      while (rs.next()) {
+                          System.out.println(rs.getString("language"));
+                          output_Stream.writeUTF(rs.getString("language"));
+                      }
+                      output_Stream.writeUTF("");
+                      System.out.println("Artist data sent succesfully");
+                  } catch (Exception e) {
+                      System.out.println("Error sending Artist data from server");
+                  }
+              }
+
+              else if(appData.getQueryType().equals("getGenreData")){
+                  System.out.println("artist function server side");
+                  System.out.println("Loading artists from server");
+                  String query = "select distinct genre from allsongs order by genre asc ";
+                  try {
+                      Database_Connection con = new Database_Connection();
+                      Statement stat = con.getStat();
+                      ResultSet rs = stat.executeQuery(query);
+                      System.out.println("Sending artist data to client");
+                      while (rs.next()) {
+                          System.out.println(rs.getString("genre"));
+                          output_Stream.writeUTF(rs.getString("genre"));
+                      }
+                      output_Stream.writeUTF("");
+                      System.out.println("Artist data sent succesfully");
+                  } catch (Exception e) {
+                      System.out.println("Error sending Artist data from server");
                   }
               }
 
 
 
+              else if(appData.getQueryType().equals("getSongs")){
+                  System.out.println("Loading songs  from server");
+                  out.println(appData.getPlaylistName());
+                  out.println(appData.getUserName());
+                  String query = "select songname from allsongs where "+ appData.getPlaylistName() +" = '"+ appData.getUserName() +"'";
+                  try {
+                      Database_Connection con = new Database_Connection();
+                      Statement stat = con.getStat();
+                      ResultSet rs = stat.executeQuery(query);
+                      System.out.println("Sending songs data to client");
+                      while (rs.next()) {
+                          System.out.println(rs.getString("songname"));
+                          output_Stream.writeUTF(rs.getString("songname"));
+                      }
+                      output_Stream.writeUTF("");
+                      System.out.println("Songs  sent succesfully");
+                  } catch (Exception e) {
+                      System.out.println("Error sending songs from server");
+                  }
+              }
 
-               output_Stream.flush();
+                output_Stream.flush();
+
            }//while loop ends
               // this.dis.close();
               // this.dos.close();
