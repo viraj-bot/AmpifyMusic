@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="loginPanel" fx:id="rootPane" prefHeight="463.0" prefWidth="624.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.SignUpController">
+<AnchorPane id="loginPanel" fx:id="rootPane" prefHeight="463.0" prefWidth="624.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.SignUpController">
     <opaqueInsets>
         <Insets />
     </opaqueInsets>
@@ -47,7 +47,7 @@
                   <Font name="Calibri" size="14.0" />
                </font>
             </JFXPasswordField>
-            <JFXButton buttonType="RAISED" layoutX="86.0" layoutY="366.0" onAction="#signup" prefHeight="14.0" prefWidth="148.0" ripplerFill="#bfb8b8" style="-fx-background-color: #434242;" text="Sign Up" textFill="#b2aeae" textOverrun="CLIP">
+            <JFXButton buttonType="RAISED" layoutX="86.0" layoutY="378.0" onAction="#signup" prefHeight="14.0" prefWidth="148.0" ripplerFill="#bfb8b8" style="-fx-background-color: #434242;" text="Sign Up" textFill="#b2aeae" textOverrun="CLIP">
                <font>
                   <Font name="Calibri Bold" size="16.0" />
                </font>
@@ -85,6 +85,11 @@
                   <Font name="Calibri" size="14.0" />
                </font>
             </JFXPasswordField>
+            <Label fx:id="warningLabel" alignment="CENTER" layoutX="40.0" layoutY="348.0" prefHeight="18.0" prefWidth="250.0" textFill="#c60e0e">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

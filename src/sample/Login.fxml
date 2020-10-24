@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" prefHeight="463.0" prefWidth="631.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.LoginController">
+<AnchorPane fx:id="rootPane" prefHeight="463.0" prefWidth="631.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.LoginController">
    <children>
       <AnchorPane prefHeight="456.0" prefWidth="294.0">
          <children>
@@ -71,6 +71,11 @@
                   <Image url="@Icons/icons8_lock_20px.png" />
                </image>
             </ImageView>
+            <Label fx:id="warningLabel" alignment="CENTER" layoutX="32.0" layoutY="269.0" prefHeight="18.0" prefWidth="250.0" textFill="#c60e0e">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font>
+            </Label>
          </children></AnchorPane>
    </children>
 </AnchorPane>
