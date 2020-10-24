@@ -23,9 +23,8 @@ import javafx.util.Duration;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 
+import java.io.*;
 import java.util.List ;
-import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -35,8 +34,7 @@ public class HomeController implements Initializable {
     private MediaPlayer mediaPlayer;
     int trackNo = 0;
     Boolean status = false;
-    private File file;
-    private ObservableList<String> list = FXCollections.observableArrayList();
+    //private ObservableList<String> list = FXCollections.observableArrayList();
     private List<File> fileList;
    // private HashMap<String , List<File>> playlists = new HashMap<>();
     int currentSelectedPane=3;
@@ -75,7 +73,15 @@ public class HomeController implements Initializable {
     @FXML
     private Label playlistNameLabel;
     @FXML
+    private Label songNameLabel;
+    @FXML
+    private AnchorPane songPane;
+    @FXML
+    private JFXListView<String> songsListView;
+    @FXML
     private JFXListView<String> playlistListView;
+    @FXML
+    private  JFXListView<String> libraryListView;
     @FXML
     private AnchorPane libraryPane;
     @FXML
@@ -152,7 +158,7 @@ public class HomeController implements Initializable {
             mediaPlayer.pause();
             status = false;
             try {
-                playImage.setImage(new Image(new FileInputStream("src/sample/Icons/playIcon.png")));
+                playImage.setImage(new Image(new FileInputStream("src/client/Icons/playIcon.png")));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -160,7 +166,7 @@ public class HomeController implements Initializable {
             mediaPlayer.play();
             status = true;
             try {
-                playImage.setImage(new Image(new FileInputStream("src/sample/Icons/pauseIcon.png")));
+                playImage.setImage(new Image(new FileInputStream("src/client/Icons/pauseIcon.png")));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -168,13 +174,34 @@ public class HomeController implements Initializable {
         }
     }
 
+    public void nextButtonPressed(){
+        if(currentlyPlayingPlaylist == "local"){
+            System.out.println(currentSong);
+            int trackno = queue.indexOf(currentSong) + 1;
+            if(trackno==queue.size()){  trackno = 0;  }
+            System.out.println(trackno);
+            jumpTrack(trackno);
+            queueListView.getSelectionModel().select(trackno);
+        }
+    }
+
+    public void previousButtonPressed(){
+        if(currentlyPlayingPlaylist == "local"){
+            System.out.println(currentSong);
+            int trackno = queue.indexOf(currentSong) - 1;
+            if(trackno<0){  trackno = 0;  }
+            System.out.println(trackno);
+            jumpTrack(trackno);
+            queueListView.getSelectionModel().select(trackno);
+        }
+    }
 
     public void stop() {
         mediaPlayer.stop();
         mediaPlayer.dispose();
         status = false;
         try {
-            playImage.setImage(new Image(new FileInputStream("src/sample/Icons/playIcon.png")));
+            playImage.setImage(new Image(new FileInputStream("src/client/Icons/playIcon.png")));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -199,22 +226,22 @@ public class HomeController implements Initializable {
     }
 
 
-    void handlePlay(String path) {
-        String fileExtension;
+    void playLocalSong(File f) {
+        String fileName, path, fileExtension;
+        path = f.toURI().toString();
         Media media = new Media(path);
-        System.out.println("path:"+path);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
         try {
-            playImage.setImage(new Image(new FileInputStream("src/sample/Icons/pauseIcon.png")));
+            playImage.setImage(new Image(new FileInputStream("src/client/Icons/pauseIcon.png")));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        status=true;
-        songName.setText("Now Playing-\n" + currentSong);
+        status = true;
+        fileName = f.getName();
+        songName.setText("Now Playing-\n" + fileName);
         progressBar.setValue(0.0);
-        fileExtension = path.substring(path.lastIndexOf(".") + 1, currentSong.length());
-        System.out.println("fileExtension" + fileExtension);
+        fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, f.getName().length());
         if (fileExtension.equals("mp4")) {
             mediaView.setMediaPlayer(mediaPlayer);
             DoubleProperty widthProp = mediaView.fitWidthProperty();
@@ -228,6 +255,8 @@ public class HomeController implements Initializable {
         } else if (fileExtension.equals("mp3") || fileExtension.equals("wav") && status) {
             mediaViewPanel.toBack();
         }
+
+
         volumeSlider.setValue(mediaPlayer.getVolume() * 100);
         volumeSlider.valueProperty().addListener(new InvalidationListener() {
             @Override
@@ -237,40 +266,128 @@ public class HomeController implements Initializable {
         });
 
         mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
-            progressBar.setValue(newValue.toSeconds());
-            currentTime.setText("" + getSecondsToSimpleString(newValue.toSeconds()));
-        }
+                    progressBar.setValue(newValue.toSeconds());
+                    currentTime.setText("" + getSecondsToSimpleString(newValue.toSeconds()));
+                }
         );
 
-        progressBar.setOnMousePressed(event -> mediaPlayer.seek(Duration.seconds(progressBar.getValue())));
+        progressBar.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mediaPlayer.seek(Duration.seconds(progressBar.getValue()));
+            }
+        });
 
         progressBar.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 mediaPlayer.seek(Duration.seconds(progressBar.getValue()));
             }
-
         });
 
         mediaPlayer.setOnReady(new Runnable() {
             @Override
             public void run() {
-               Duration total = media.getDuration();
+                Duration total = media.getDuration();
                 trackLength.setText(getSecondsToSimpleString(total.toSeconds()));
                 progressBar.setMax(total.toSeconds());
+
+            }
+        });
+
+        mediaPlayer.setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                nextButtonPressed();
             }
         });
     }//handlePlay method ends here
 
+    public  void handlePlay(String songName){
+        currentSong =songName;
+        System.out.println(songName);
+                try {
+                    AppData playSong = new AppData("playSong" , songName);
+                    Main.clientOutputStream.writeObject(playSong);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = Main.clientInputStream.read(buffer);
+                    ByteArrayOutputStream output = new ByteArrayOutputStream();
+                    try {
+                        System.out.println("here 17");
+                        while (bytesRead != -1)
+                        {
+                            output.write(buffer, 0, bytesRead);
+                            bytesRead = Main.clientInputStream.read(buffer);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    byte[] tuneAsBytes = output.toByteArray();
+                    File tempMp3 = File.createTempFile("music", ".mp3");
+                    FileOutputStream fos = new FileOutputStream(tempMp3);
+                    fos.write(tuneAsBytes);
+                    System.out.println(tempMp3.getAbsolutePath());
+                    System.out.println(tempMp3.toURI().toURL().toString());
+                    final Media media = new Media(tempMp3.toURI().toURL().toString());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    tempMp3.deleteOnExit();
+                    mediaView.setMediaPlayer(mediaPlayer);
+                    mediaPlayer.play();
+                    volumeSlider.setValue(mediaPlayer.getVolume() * 100);
+                    volumeSlider.valueProperty().addListener(new InvalidationListener() {
+                        @Override
+                        public void invalidated(Observable observable) {
+                            mediaPlayer.setVolume(volumeSlider.getValue() / 100);
+                        }
+                    });
+
+                    mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+                                progressBar.setValue(newValue.toSeconds());
+                                currentTime.setText("" + getSecondsToSimpleString(newValue.toSeconds()));
+                            }
+                    );
+
+                    progressBar.setOnMousePressed(event -> mediaPlayer.seek(Duration.seconds(progressBar.getValue())));
+
+                    progressBar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            mediaPlayer.seek(Duration.seconds(progressBar.getValue()));
+                        }
+
+                    });
+
+                    mediaPlayer.setOnReady(new Runnable() {
+                        @Override
+                        public void run() {
+                            Duration total = media.getDuration();
+                            trackLength.setText(getSecondsToSimpleString(total.toSeconds()));
+                            progressBar.setMax(total.toSeconds());
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
     public void jumpTrack(int index) {
+        File file = null;
+        System.out.println(index);
         if (status) {
             mediaPlayer.stop();
         }
         try {
-
-
+            trackNo = index;
+            file = fileList.get(trackNo);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if (file != null) {
+            playLocalSong(file);
+            currentlyPlayingPlaylist = "local";
+            currentSong = file.getName();
         }
     }//jumpTrack() method closed here
 
@@ -285,16 +402,16 @@ public class HomeController implements Initializable {
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Select files", "*.mp3", "*.mp4", "*.wav");
         fileChooser.getExtensionFilters().add(filter);
         fileList = fileChooser.showOpenMultipleDialog(null);
-        list.clear();
         for (File value : fileList) {
-            list.add(value.getName());
+            queue.add(value.getName());
         }
-        playlistListView.setItems(list);
-        playlistListView.getSelectionModel().select(0);
-        playlistListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        queuePane.toFront();
+        queueListView.setItems(queue);
+        queueListView.getSelectionModel().select(0);
+        queueListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                jumpTrack(playlistListView.getSelectionModel().getSelectedIndex());
+                jumpTrack(queueListView.getSelectionModel().getSelectedIndex());
             }
         });
     }//openFile() method closed here
@@ -315,8 +432,7 @@ public class HomeController implements Initializable {
                 else {
                     playlistNames.add(createPlaylistTextField.getText());
                    try{
-                       Main.clientOutputStream.writeUTF("CreatePlaylist");
-                       AppData createPlaylistData = new AppData(currentUser , createPlaylistTextField.getText());
+                       AppData createPlaylistData = new AppData("CreatePlaylist" , currentUser , createPlaylistTextField.getText());
                        Main.clientOutputStream.writeObject(createPlaylistData);
                    }catch(Exception e){
                        e.printStackTrace();
@@ -336,9 +452,8 @@ public class HomeController implements Initializable {
 
     public void loadPlaylists(){
         try{
-            Main.clientOutputStream.writeUTF("loadPlaylists");
             System.out.println("Sending username to server to get playlist names");
-            AppData loadPlaylistData = new AppData(currentUser);
+            AppData loadPlaylistData = new AppData("loadPlaylists",currentUser);
             Main.clientOutputStream.writeObject(loadPlaylistData);
             System.out.println("reading playlist names from server");
             String playlistName;
@@ -376,8 +491,7 @@ public class HomeController implements Initializable {
             currentPlaylist = playlistNames.get(i);
             playlistNameLabel.setText(currentPlaylist);
             try {
-                Main.clientOutputStream.writeUTF("showPlaylist");
-                AppData showPlaylistData = new AppData(currentUser , currentPlaylist);
+                AppData showPlaylistData = new AppData("showPlaylist", currentUser , currentPlaylist);
                 Main.clientOutputStream.writeObject(showPlaylistData);
                 System.out.println("Reading list of songs in playlist from server");
                 String songName;
@@ -394,7 +508,7 @@ public class HomeController implements Initializable {
                 playlistListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        jumpTrack(playlistListView.getSelectionModel().getSelectedIndex());
+                        handlePlay(playlistListView.getSelectionModel().getSelectedItem());
                     }
                 });
             } catch (Exception e) {
@@ -406,8 +520,7 @@ public class HomeController implements Initializable {
 
    public void deletePlaylist(){
        try {
-           Main.clientOutputStream.writeUTF("deletePlaylist");
-           AppData deletePlaylist = new AppData(currentUser , currentPlaylist);
+           AppData deletePlaylist = new AppData("deletePlaylist",currentUser , currentPlaylist);
            Main.clientOutputStream.writeObject(deletePlaylist);
            System.out.println("delete data sent successfully");
            playlistNames.remove(currentPlaylist);
@@ -420,6 +533,8 @@ public class HomeController implements Initializable {
 
     public void clearQueueButtonPressed(){
         queue.clear();
+        stop();
+       // fileList.clear();
     }
 
     public void playlistPlayButtonPressed(){
@@ -428,7 +543,7 @@ public class HomeController implements Initializable {
         queue.addAll(listOfSongsInPlaylist) ;
        currentlyPlayingPlaylist = currentPlaylist ;
        playlistListView.getSelectionModel().select(0);
-       jumpTrack(0);
+       handlePlay(playlistListView.getSelectionModel().getSelectedItem());
         System.out.println("queue:"+ queue);
     }
 
@@ -441,30 +556,115 @@ public class HomeController implements Initializable {
     }
 
     public void artistButtonPressed() {
+        System.out.println("entered artist fuction");
+        ObservableList<String> artists = FXCollections.observableArrayList();
         libraryPane.toFront();
         libraryNameLabel.setText("Artists");
+        System.out.println("sending request to get artist data");
         try {
-            Main.clientOutputStream.writeUTF("getArtistData");
-
+            AppData artistData = new AppData("getArtistData");
+            Main.clientOutputStream.writeObject(artistData);
+            String artistName;
+            while (!"".equals(artistName = Main.clientInputStream.readUTF())) {
+                System.out.println("Artist name: " + artistName);
+                artists.add(artistName);
+            }
+            libraryListView.setItems(artists);
+            libraryListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    getSongs(libraryListView.getSelectionModel().getSelectedItem() , "artist");
+                }
+            });
         }catch(Exception e){
-            System.out.println("Error geting artist data");
+            System.out.println("Error getting artist data");
         }
     }
 
+
     public void genreButtonPressed(){
+        ObservableList<String> genres = FXCollections.observableArrayList();
         libraryPane.toFront();
         libraryNameLabel.setText("Genres");
+        System.out.println("sending request to get genre data");
+        try {
+            AppData languageData = new AppData("getGenreData");
+            Main.clientOutputStream.writeObject(languageData);
+            String genre;
+            while (!"".equals(genre = Main.clientInputStream.readUTF())) {
+                System.out.println("genre : " + genre);
+                genres.add(genre);
+            }
+            libraryListView.setItems(genres);
+            libraryListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    getSongs(libraryListView.getSelectionModel().getSelectedItem() , "genre");
+                }
+            });
+        }catch(Exception e){
+            System.out.println("Error getting genre data");
+        }
     }
 
     public void languagesButtonPressed(){
+        ObservableList<String> languages = FXCollections.observableArrayList();
         libraryPane.toFront();
         libraryNameLabel.setText("Languages");
+        System.out.println("sending request to get language data");
+        try {
+            AppData languageData = new AppData("getLanguageData");
+            Main.clientOutputStream.writeObject(languageData);
+            String language;
+            while (!"".equals(language = Main.clientInputStream.readUTF())) {
+                System.out.println("Language : " + language);
+                languages.add(language);
+            }
+            libraryListView.setItems(languages);
+            libraryListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    getSongs(libraryListView.getSelectionModel().getSelectedItem() , "language");
+                }
+            });
+        }catch(Exception e){
+            System.out.println("Error getting language data");
+        }
     }
 
     public void likedSongsButtonPressed(){
         libraryPane.toFront();
         libraryNameLabel.setText("Liked Songs");
+        libraryListView.setItems(null);
     }
+
+    public void getSongs(String name , String type){
+        ObservableList<String> songList = FXCollections.observableArrayList();
+        songPane.toFront();
+        songNameLabel.setText(name);
+        try {
+            AppData getSongsByArtist = new AppData("getSongs", name , type);
+            Main.clientOutputStream.writeObject(getSongsByArtist);
+            System.out.println("Reading list of song  from server");
+            String songName ;
+            while (!"".equals(songName = Main.clientInputStream.readUTF())){
+                System.out.println("Song Name : "+ songName);
+                songList.add(songName);
+            }
+            songsListView.setItems(songList);
+            songsListView.getSelectionModel().select(0);
+            songsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    handlePlay(songsListView.getSelectionModel().getSelectedItem());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Unable to get songs");
+        }
+    }
+
 
     public void historyButtonPressed(){
         libraryPane.toFront();

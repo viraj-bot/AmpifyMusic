@@ -127,6 +127,10 @@
     -fx-text-fill: white;
 }
 
+.menu .menu-button:selected{
+    -fx-background-color: #242424;
+}
+
 .song_name {
     -fx-text-fill : white;
 }
