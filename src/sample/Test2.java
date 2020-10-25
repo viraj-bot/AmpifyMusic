@@ -41,6 +41,7 @@ public class Test2 implements Initializable {
     void OnOff(MouseEvent event) {
         if (ONOFF.getText().equals("ON")) {
             ONOFF.setText("OFF");
+            System.out.println("Equilizer is ON");
             equalizer = mediaPlayer.getAudioEqualizer();
             equalizer.setEnabled(true);
             bands = equalizer.getBands();
@@ -54,11 +55,11 @@ public class Test2 implements Initializable {
             bands.get(7).setGain(band7.getValue() / 100 * 24 - 12);
             bands.get(8).setGain(band8.getValue() / 100 * 24 - 12);
             bands.get(9).setGain(band9.getValue() / 100 * 24 - 12);
+            band0.setOnMouseClicked(Event -> bands.get(0).setGain(band0.getValue() / 100 * 24 - 12));
             band0.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     double gain;
-
                     if ((gain = (band0.getValue() / 100 * 24)) >= 12.0) {
                         gain = gain - 12.0;
                         bands.get(0).setGain(gain);
@@ -68,6 +69,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band1.setOnMouseClicked(Event -> bands.get(1).setGain(band0.getValue() / 100 * 24 - 12));
             band1.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -81,6 +83,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band2.setOnMouseClicked(Event -> bands.get(2).setGain(band0.getValue() / 100 * 24 - 12));
             band2.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -93,6 +96,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band3.setOnMouseClicked(Event -> bands.get(3).setGain(band0.getValue() / 100 * 24 - 12));
             band3.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -105,6 +109,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band4.setOnMouseClicked(Event -> bands.get(4).setGain(band0.getValue() / 100 * 24 - 12));
             band4.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -117,6 +122,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band5.setOnMouseClicked(Event -> bands.get(5).setGain(band0.getValue() / 100 * 24 - 12));
             band5.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -129,6 +135,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band6.setOnMouseClicked(Event -> bands.get(6).setGain(band0.getValue() / 100 * 24 - 12));
             band6.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -141,6 +148,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band7.setOnMouseClicked(Event -> bands.get(7).setGain(band0.getValue() / 100 * 24 - 12));
             band7.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -153,6 +161,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band8.setOnMouseClicked(Event -> bands.get(8).setGain(band0.getValue() / 100 * 24 - 12));
             band8.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -165,6 +174,7 @@ public class Test2 implements Initializable {
                     }
                 }
             });
+            band9.setOnMouseClicked(Event -> bands.get(9).setGain(band0.getValue() / 100 * 24 - 12));
             band9.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -177,7 +187,6 @@ public class Test2 implements Initializable {
                     }
                 }
             });
-
         } else if (ONOFF.getText().equals("OFF")) {
             ONOFF.setText("ON");
             System.out.println("Equilizer is OFF");
@@ -195,30 +204,6 @@ public class Test2 implements Initializable {
             equalizer = null;
         }
     }
-
-    private double band;
-    private double centerfrq;
-    private double gn;
-
-    @FXML
-    void set(MouseEvent event) {
-        System.out.println("clicked");
-        System.out.println("here1");
-        AudioEqualizer au = mediaView.getMediaPlayer().getAudioEqualizer();
-        System.out.println("here2");
-        au.setEnabled(true);
-        System.out.println("here3");
-        System.out.println("max bands " + au.MAX_NUM_BANDS);
-        ObservableList<EqualizerBand> bands = au.getBands();
-        for (int i = 0; i < 4; i++) {
-            System.out.println("center frequency = " + bands.get(i).getCenterFrequency());
-            System.out.println("BandWidth  = " + bands.get(i).getBandwidth());
-            System.out.println("Gain = " + bands.get(i).getGain());
-            bands.get(i).setGain(-12);
-            System.out.println("Gain = " + bands.get(0).getGain());
-        }
-    }
-
 
     Map<String, List<String>> lyrics = new HashMap<>();
     Map<String, Long> EndTime = new HashMap<>();
@@ -308,6 +293,7 @@ public class Test2 implements Initializable {
 //                System.out.println("Key=" + entry.getKey() + "  ,  Value=" + entry.getValue());
 //            }
             displayLyrics();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -382,7 +368,7 @@ public class Test2 implements Initializable {
         return "00" + ":" + str1 + ":" + str2 + "," + milli;
     }
 
-    public void play(String s) {
+    public void play(String s) throws InterruptedException {
 
         Media media = new Media(s);
         mediaPlayer = new MediaPlayer(media);
@@ -393,5 +379,6 @@ public class Test2 implements Initializable {
                     currentTime = getSecondsToSimpleString(newValue.toSeconds());
                 }
         );
+
     }
 }
