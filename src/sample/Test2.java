@@ -1,4 +1,4 @@
-package client;
+package sample;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXSlider;
@@ -7,11 +7,21 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.*;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.*;
 
 public class Test2 implements Initializable {
@@ -29,23 +39,32 @@ public class Test2 implements Initializable {
 
     @FXML
     void OnOff(MouseEvent event) {
-        System.out.println("Equilizer is ON");
         if (ONOFF.getText().equals("ON")) {
             ONOFF.setText("OFF");
             equalizer = mediaPlayer.getAudioEqualizer();
             equalizer.setEnabled(true);
             bands = equalizer.getBands();
+            bands.get(0).setGain(band0.getValue() / 100 * 24 - 12);
+            bands.get(1).setGain(band1.getValue() / 100 * 24 - 12);
+            bands.get(2).setGain(band2.getValue() / 100 * 24 - 12);
+            bands.get(3).setGain(band3.getValue() / 100 * 24 - 12);
+            bands.get(4).setGain(band4.getValue() / 100 * 24 - 12);
+            bands.get(5).setGain(band5.getValue() / 100 * 24 - 12);
+            bands.get(6).setGain(band6.getValue() / 100 * 24 - 12);
+            bands.get(7).setGain(band7.getValue() / 100 * 24 - 12);
+            bands.get(8).setGain(band8.getValue() / 100 * 24 - 12);
+            bands.get(9).setGain(band9.getValue() / 100 * 24 - 12);
             band0.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     double gain;
+
                     if ((gain = (band0.getValue() / 100 * 24)) >= 12.0) {
                         gain = gain - 12.0;
                         bands.get(0).setGain(gain);
-                        System.out.println(bands.get(0).getGain());
+
                     } else {
                         bands.get(0).setGain(gain - 12.0);
-                        System.out.println(bands.get(0).getGain());
                     }
                 }
             });
@@ -53,6 +72,7 @@ public class Test2 implements Initializable {
                 @Override
                 public void handle(MouseEvent event) {
                     double gain;
+
                     if ((gain = (band1.getValue() / 100 * 24)) >= 12.0) {
                         gain = gain - 12.0;
                         bands.get(1).setGain(gain);
@@ -158,9 +178,9 @@ public class Test2 implements Initializable {
                 }
             });
 
-        } else {
-
+        } else if (ONOFF.getText().equals("OFF")) {
             ONOFF.setText("ON");
+            System.out.println("Equilizer is OFF");
             band0.setValue(50);
             band1.setValue(50);
             band2.setValue(50);
@@ -172,7 +192,6 @@ public class Test2 implements Initializable {
             band8.setValue(50);
             band9.setValue(50);
             equalizer.setEnabled(false);
-            System.out.println("Equilizer is ON");
             equalizer = null;
         }
     }
@@ -213,7 +232,20 @@ public class Test2 implements Initializable {
             public void run() {
                 String songname = "SomethingJustLikeThis";
                 try {
+
                     Main.dos.writeObject(songname);
+                    byte[] buffer = new byte[1024];
+                    int bytesRead = Main.dis.read(buffer);
+                    ByteArrayOutputStream output = new ByteArrayOutputStream();
+                    try {
+                        System.out.println("here 17");
+                        while (bytesRead != -1) {
+                            output.write(buffer, 0, bytesRead);
+                            bytesRead = Main.dis.read(buffer);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     byte[] tuneAsBytes = (byte[]) Main.dis.readObject();
 
@@ -222,6 +254,11 @@ public class Test2 implements Initializable {
                     fos.write(tuneAsBytes);
                     System.out.println(tempMp3.getAbsolutePath());
                     System.out.println(tempMp3.getAbsolutePath());
+                    final Media media = new Media(tempMp3.toURI().toURL().toString());
+                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    mediaView.setMediaPlayer(mediaPlayer);
+                    mediaPlayer.play();
+
                     System.out.println("here 21");
                     tempMp3.deleteOnExit();
                     Main.dos.writeObject(songname);
@@ -238,6 +275,7 @@ public class Test2 implements Initializable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             }
         };
         Thread t = new Thread(r);
@@ -275,7 +313,8 @@ public class Test2 implements Initializable {
         }
     }
 
-    public void displayLyrics() {
+    public void displayLyrics() throws InterruptedException {
+        Thread.sleep(1000);
         while (true) {
             try {
                 if (lyrics.containsKey(currentTime)) {
