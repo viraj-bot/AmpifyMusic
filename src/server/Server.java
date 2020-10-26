@@ -1,15 +1,11 @@
 package server;
+
 import client.AppData;
 import client.User;
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import server.Database_Connection;
 
 import java.io.*;
 
 import static java.lang.Integer.parseInt;
-import static java.lang.System.in;
 import static java.lang.System.out;
 
 import java.net.*;
@@ -19,9 +15,6 @@ import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import java.lang.*;
 
 public class Server {
@@ -170,11 +163,30 @@ class LoginHandler extends Thread                                               
                }
 
               else if(appData.getQueryType().equals("playSong")){
-                  out.println("entered playSong");
-                  String songname =  appData.getUserName();
-                  File mp3 = new File("/D:/Ampify/" + songname + ".mp3").getCanonicalFile();
-                  byte[] arr = Files.readAllBytes(Paths.get(mp3.toURI()));
-                  output_Stream.write(arr);
+                  try {
+                      String songname = (String) input_Stream.readObject();
+                      System.out.println(songname);
+                      File songFile = new File("/D:/Ampify/" + songname + ".mp3").getCanonicalFile();
+                      System.out.println(songFile);
+                      File lyricsFile = new File("/D:/AmpifyLyrics/" + songname + ".srt").getCanonicalFile();
+                      byte[] songBytes = Files.readAllBytes(Paths.get(songFile.toURI()));
+                      System.out.println(songBytes);
+                      byte[] lyricsBytes = Files.readAllBytes(Paths.get(lyricsFile.toURI()));
+                      System.out.println(lyricsBytes);
+                      try {
+                          System.out.println(songBytes);
+                          output_Stream.writeObject(songBytes);
+                          System.out.println("song sent");
+                          String str = (String) input_Stream.readObject();
+                          System.out.println(str);
+                          output_Stream.writeObject(lyricsBytes);
+                      } catch (Exception e) {
+                          e.printStackTrace();
+                      }
+
+                  } catch (Exception ex) {
+                      ex.printStackTrace();
+                  }
               }
 
                else if (appData.getQueryType().equals("loadPlaylists")) {
@@ -298,7 +310,7 @@ class LoginHandler extends Thread                                               
                   System.out.println("Loading songs  from server");
                   out.println(appData.getPlaylistName());
                   out.println(appData.getUserName());
-                  String query = "select songname from allsongs where "+ appData.getPlaylistName() +" = '"+ appData.getUserName() +"'";
+                  String query = "select songname from allsongs where "+ appData.getType() +" = '"+ appData.getName() +"'";
                   try {
                       Database_Connection con = new Database_Connection();
                       Statement stat = con.getStat();
