@@ -4,7 +4,6 @@
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import com.jfoenix.controls.JFXSlider?>
-<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
@@ -99,13 +98,130 @@
             </JFXButton>
             <Separator layoutY="592.0" opacity="0.3" prefWidth="180.0" AnchorPane.bottomAnchor="44.0" />
          </children></AnchorPane>
+      <AnchorPane fx:id="playerControl" layoutY="646.0" maxHeight="165.0" maxWidth="1920.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="1280.0" style="-fx-background-color: #242424;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <JFXSlider fx:id="progressBar" layoutX="317.0" layoutY="75.0" majorTickUnit="1.0" minorTickCount="0" prefHeight="18.0" prefWidth="646.0" AnchorPane.leftAnchor="317.0" AnchorPane.rightAnchor="317.0" AnchorPane.topAnchor="55.0" />
+            <JFXSlider fx:id="volumeSlider" layoutX="1132.0" layoutY="35.0" prefHeight="18.0" prefWidth="141.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="18.0" />
+            <Label fx:id="currentTimeLabel" layoutX="279.0" layoutY="49.0" prefHeight="28.0" prefWidth="61.0" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="279.0" AnchorPane.topAnchor="49.0">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font></Label>
+            <Label fx:id="trackLength" layoutX="980.0" layoutY="48.0" prefHeight="28.0" prefWidth="61.0" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="239.0" AnchorPane.topAnchor="48.0">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font>
+            </Label>
+            <JFXButton layoutX="1032.0" layoutY="28.0" prefHeight="31.0" prefWidth="25.0" ripplerFill="#2f2f2f" text=" " AnchorPane.rightAnchor="145.0" AnchorPane.topAnchor="10.0">
+               <graphic>
+                  <ImageView fx:id="volumeImage" fitHeight="22.0" fitWidth="20.0">
+                     <image>
+                        <Image url="@Icons/icons8_audio_24px.png" />
+                     </image>
+                  </ImageView>
+               </graphic></JFXButton>
+            <JFXButton fx:id="openButton" layoutX="1066.0" layoutY="12.0" onMouseClicked="#openSong" text=" " AnchorPane.rightAnchor="175.0" AnchorPane.topAnchor="12.0">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0">
+                     <image>
+                        <Image url="@Icons/icons8_opened_folder_32px.png" />
+                     </image>
+                  </ImageView>
+               </graphic></JFXButton>
+            <JFXButton fx:id="queueButton" layoutY="10.0" onMouseClicked="#queueButtonPressed" prefHeight="30.0" prefWidth="30.0" text=" " AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="10.0">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0">
+                     <image>
+                        <Image url="@Icons/queue.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <JFXButton fx:id="lyricsButton" layoutX="991.0" layoutY="9.0" onMouseClicked="#lyricsButtonPressed" prefHeight="30.0" prefWidth="25.0" text=" " AnchorPane.bottomAnchor="36.0" AnchorPane.rightAnchor="245.0">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0">
+                     <image>
+                        <Image url="@Icons/lyrics.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+            <Label fx:id="nowPlayingLabel" layoutY="2.0" prefHeight="110.0" prefWidth="230.0" textFill="WHITE" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="2.0">
+               <font>
+                  <Font name="Calibri Bold" size="14.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" layoutX="476.0" layoutY="-4.0" prefHeight="32.0" prefWidth="336.0" spacing="20.0" AnchorPane.leftAnchor="476.0" AnchorPane.rightAnchor="468.0">
+               <children>
+                  <JFXButton fx:id="shuffleButton" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@Icons/icons8_shuffle_25px_1.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="previousButton" onMouseClicked="#previousButtonPressed" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@Icons/icons8_skip_to_start_25px_1.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <VBox prefHeight="50.0" prefWidth="44.0">
+                     <children>
+                        <JFXButton fx:id="playButton" onMouseClicked="#playpause" prefHeight="40.0" prefWidth="54.0" text=" ">
+                           <graphic>
+                              <ImageView fx:id="playImage" fitHeight="40.0" fitWidth="40.0">
+                                 <image>
+                                    <Image url="@Icons/playIcon.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+                  <JFXButton fx:id="nextSong" onMouseClicked="#nextButtonPressed" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@Icons/icons8_end_25px_1.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="repeatButton" text=" ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0">
+                           <image>
+                              <Image url="@Icons/icons8_repeat_25px.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </HBox>
+            <JFXButton fx:id="stopButton" layoutX="959.9999999999999" layoutY="14.0" onMouseClicked="#stop" prefHeight="18.0" prefWidth="25.0" text=" " AnchorPane.rightAnchor="286.0000000000001" AnchorPane.topAnchor="14.0">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="15.0">
+                     <image>
+                        <Image url="@Icons/stopIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </JFXButton>
+         </children>
+      </AnchorPane>
       <AnchorPane fx:id="rootPanel" layoutX="181.0" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="lyricsPane" prefHeight="640.0" prefWidth="1110.0" style="-fx-background-color: #1b1b1c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <JFXTextArea fx:id="lyricsTextArea" focusColor="#242424" layoutX="140.0" layoutY="53.0" prefHeight="502.0" prefWidth="969.0" style="-fx-background-color: #242424;" unFocusColor="#0e9654" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="159.0" AnchorPane.topAnchor="53.0" />
-               </children>
-            </AnchorPane>
             <HBox fx:id="selectPlaylistHbox" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="640.0" prefWidth="1110.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <AnchorPane fx:id="selectPlaylistPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="300.0" prefWidth="379.0" style="-fx-background-color: #424242; -fx-background-radius: 15;">
@@ -162,87 +278,6 @@
                   </AnchorPane>
                </children>
             </HBox>
-            <AnchorPane fx:id="playlistPane" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <VBox fx:id="playlistPaneVbox" prefHeight="640.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Label fx:id="playlistNameLabel" alignment="TOP_LEFT" prefHeight="34.0" prefWidth="1082.0" textFill="#fffbfb">
-                           <font>
-                              <Font name="Calibri" size="48.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="13.0" top="15.0" />
-                           </VBox.margin>
-                        </Label>
-                        <Label fx:id="totalSongNumber" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="311.0" textFill="#e8e4e4">
-                           <VBox.margin>
-                              <Insets bottom="25.0" left="13.0" />
-                           </VBox.margin>
-                           <font>
-                              <Font name="Calibri" size="15.0" />
-                           </font>
-                        </Label>
-                        <Separator opacity="0.1" prefWidth="200.0" />
-                        <HBox>
-                           <VBox.margin>
-                              <Insets left="12.0" />
-                           </VBox.margin>
-                           <children>
-                              <Label prefHeight="36.0" prefWidth="906.0" text="Song Name " textFill="#a8a8a8">
-                                 <font>
-                                    <Font name="Calibri" size="16.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin></Label>
-                              <JFXButton fx:id="importSongsButton" ripplerFill="#1b1b1b">
-                                 <graphic>
-                                    <ImageView fx:id="importButton" fitHeight="24.0" fitWidth="21.0">
-                                       <image>
-                                          <Image url="@Icons/import.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </JFXButton>
-                              <JFXButton fx:id="deletePlaylistButton" onMouseClicked="#deletePlaylist" ripplerFill="#111111">
-                                 <graphic>
-                                    <ImageView fitHeight="24.0" fitWidth="22.0">
-                                       <image>
-                                          <Image url="@Icons/delete.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </JFXButton>
-                              <JFXButton fx:id="playlistPlayButton" onMouseClicked="#playlistPlayButtonPressed" prefHeight="36.0" prefWidth="19.0" ripplerFill="#3c3c3c">
-                                 <graphic>
-                                    <ImageView fx:id="playSongsFromCurrentPlaylistButton" fitHeight="26.0" fitWidth="18.0">
-                                       <image>
-                                          <Image url="@Icons/playall.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </JFXButton>
-                           </children>
-                        </HBox>
-                        <JFXListView fx:id="playlistListView" prefHeight="503.0" prefWidth="1110.0" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636); -fx-text-fill: white;" stylesheets="@style.css">
-                           <styleClass>
-                              <String fx:value="list-cell" />
-                              <String fx:value="list-view" />
-                           </styleClass>
-                           <contextMenu>
-                              <ContextMenu fx:id="contextMenu" style="-fx-background-color: #242424; -fx-text-fill: white;">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Play" />
-                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Add to queue" />
-                                    <MenuItem fx:id="addToPlaylistMenuButton" mnemonicParsing="false" onAction="#addToPlaylistMenuButtonPressed" style="-fx-text-fill: white;" text="Add to Playlist" />
-                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Remove from this Playlist" />
-                                </items>
-                              </ContextMenu>
-                           </contextMenu></JFXListView>
-                     </children>
-                  </VBox>
-               </children>
-            </AnchorPane>
             <AnchorPane fx:id="homePagePane" prefHeight="640.0" prefWidth="1110.0" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <VBox layoutX="7.0" prefHeight="640.0" prefWidth="1110.0" spacing="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="-7.0" AnchorPane.topAnchor="0.0">
@@ -359,6 +394,38 @@
                               </ContextMenu>
                            </contextMenu>
                         </JFXListView>
+                        <JFXListView fx:id="queueListView1" layoutX="10.0" layoutY="167.0" prefHeight="503.0" prefWidth="1110.0" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636); -fx-text-fill: white;" stylesheets="@style.css">
+                           <styleClass>
+                              <String fx:value="list-cell" />
+                              <String fx:value="list-view" />
+                           </styleClass>
+                           <contextMenu>
+                              <ContextMenu fx:id="contextMenu11" style="-fx-background-color: #242424; -fx-text-fill: white;">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Play" />
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Add to queue" />
+                                    <MenuItem fx:id="addToPlaylistMenuButton11" mnemonicParsing="false" onAction="#addToPlaylistMenuButtonPressed" style="-fx-text-fill: white;" text="Add to Playlist" />
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Remove from this Playlist" />
+                                 </items>
+                              </ContextMenu>
+                           </contextMenu>
+                        </JFXListView>
+                        <JFXListView fx:id="queueListView2" layoutX="10.0" layoutY="167.0" prefHeight="503.0" prefWidth="1110.0" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636); -fx-text-fill: white;" stylesheets="@style.css">
+                           <styleClass>
+                              <String fx:value="list-cell" />
+                              <String fx:value="list-view" />
+                           </styleClass>
+                           <contextMenu>
+                              <ContextMenu fx:id="contextMenu12" style="-fx-background-color: #242424; -fx-text-fill: white;">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Play" />
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Add to queue" />
+                                    <MenuItem fx:id="addToPlaylistMenuButton12" mnemonicParsing="false" onAction="#addToPlaylistMenuButtonPressed" style="-fx-text-fill: white;" text="Add to Playlist" />
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Remove from this Playlist" />
+                                 </items>
+                              </ContextMenu>
+                           </contextMenu>
+                        </JFXListView>
                      </children>
                   </VBox>
                </children>
@@ -405,128 +472,93 @@
                   </VBox>
                </children>
             </AnchorPane>
-         </children></AnchorPane>
-      <AnchorPane fx:id="playerControl" layoutY="646.0" maxHeight="165.0" maxWidth="1920.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="1280.0" style="-fx-background-color: #242424;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-         <children>
-            <JFXSlider fx:id="progressBar" layoutX="317.0" layoutY="75.0" majorTickUnit="1.0" minorTickCount="0" prefHeight="18.0" prefWidth="646.0" AnchorPane.leftAnchor="317.0" AnchorPane.rightAnchor="317.0" AnchorPane.topAnchor="55.0" />
-            <JFXSlider fx:id="volumeSlider" layoutX="1132.0" layoutY="35.0" prefHeight="18.0" prefWidth="141.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="18.0" />
-            <Label fx:id="currentTime" layoutX="279.0" layoutY="49.0" prefHeight="28.0" prefWidth="61.0" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="279.0" AnchorPane.topAnchor="49.0">
-               <font>
-                  <Font name="Calibri" size="12.0" />
-               </font></Label>
-            <Label fx:id="trackLength" layoutX="980.0" layoutY="48.0" prefHeight="28.0" prefWidth="61.0" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="239.0" AnchorPane.topAnchor="48.0">
-               <font>
-                  <Font name="Calibri" size="12.0" />
-               </font>
-            </Label>
-            <JFXButton layoutX="1032.0" layoutY="28.0" prefHeight="31.0" prefWidth="25.0" ripplerFill="#2f2f2f" text=" " AnchorPane.rightAnchor="145.0" AnchorPane.topAnchor="10.0">
-               <graphic>
-                  <ImageView fx:id="volumeImage" fitHeight="22.0" fitWidth="20.0">
-                     <image>
-                        <Image url="@Icons/icons8_audio_24px.png" />
-                     </image>
-                  </ImageView>
-               </graphic></JFXButton>
-            <JFXButton fx:id="openButton" layoutX="1066.0" layoutY="12.0" onMouseClicked="#openSong" text=" " AnchorPane.rightAnchor="175.0" AnchorPane.topAnchor="12.0">
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0">
-                     <image>
-                        <Image url="@Icons/icons8_opened_folder_32px.png" />
-                     </image>
-                  </ImageView>
-               </graphic></JFXButton>
-            <JFXButton fx:id="queueButton" layoutY="10.0" onMouseClicked="#queueButtonPressed" prefHeight="30.0" prefWidth="30.0" text=" " AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="10.0">
-               <graphic>
-                  <ImageView fitHeight="25.0" fitWidth="25.0">
-                     <image>
-                        <Image url="@Icons/queue.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </JFXButton>
-            <JFXButton fx:id="lyricsButton" layoutX="991.0" layoutY="9.0" onMouseClicked="#lyricsButtonPressed" prefHeight="30.0" prefWidth="25.0" text=" " AnchorPane.bottomAnchor="36.0" AnchorPane.rightAnchor="245.0">
-               <graphic>
-                  <ImageView fitHeight="25.0" fitWidth="25.0">
-                     <image>
-                        <Image url="@Icons/lyrics.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </JFXButton>
-            <Label fx:id="songName" layoutY="2.0" prefHeight="110.0" prefWidth="230.0" textFill="WHITE" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="2.0">
-               <font>
-                  <Font name="Calibri Bold" size="14.0" />
-               </font>
-            </Label>
-            <HBox alignment="CENTER" layoutX="476.0" layoutY="-4.0" prefHeight="32.0" prefWidth="336.0" spacing="20.0" AnchorPane.leftAnchor="476.0" AnchorPane.rightAnchor="468.0">
+            <AnchorPane fx:id="playlistPane" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <JFXButton fx:id="shuffleButton" text=" ">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0">
-                           <image>
-                              <Image url="@Icons/icons8_shuffle_25px_1.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
-                  <JFXButton fx:id="previousButton" onMouseClicked="#previousButtonPressed" text=" ">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0">
-                           <image>
-                              <Image url="@Icons/icons8_skip_to_start_25px_1.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
-                  <VBox prefHeight="50.0" prefWidth="44.0">
+                  <VBox fx:id="playlistPaneVbox" prefHeight="640.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <JFXButton fx:id="playButton" onMouseClicked="#playpause" prefHeight="40.0" prefWidth="54.0" text=" ">
-                           <graphic>
-                              <ImageView fx:id="playImage" fitHeight="40.0" fitWidth="40.0">
-                                 <image>
-                                    <Image url="@Icons/playIcon.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </JFXButton>
+                        <Label fx:id="playlistNameLabel" alignment="TOP_LEFT" prefHeight="34.0" prefWidth="1082.0" textFill="#fffbfb">
+                           <font>
+                              <Font name="Calibri" size="48.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="13.0" top="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Label fx:id="totalSongNumber" alignment="TOP_LEFT" prefHeight="25.0" prefWidth="311.0" textFill="#e8e4e4">
+                           <VBox.margin>
+                              <Insets bottom="25.0" left="13.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Calibri" size="15.0" />
+                           </font>
+                        </Label>
+                        <Separator opacity="0.1" prefWidth="200.0" />
+                        <HBox>
+                           <VBox.margin>
+                              <Insets left="12.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label prefHeight="36.0" prefWidth="906.0" textFill="#a8a8a8">
+                                 <font>
+                                    <Font name="Calibri" size="16.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin></Label>
+                              <JFXButton fx:id="importSongsButton" ripplerFill="#1b1b1b">
+                                 <graphic>
+                                    <ImageView fx:id="importButton" fitHeight="24.0" fitWidth="21.0">
+                                       <image>
+                                          <Image url="@Icons/import.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="deletePlaylistButton" onMouseClicked="#deletePlaylist" ripplerFill="#111111">
+                                 <graphic>
+                                    <ImageView fitHeight="24.0" fitWidth="22.0">
+                                       <image>
+                                          <Image url="@Icons/delete.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                              <JFXButton fx:id="playlistPlayButton" onMouseClicked="#playlistPlayButtonPressed" prefHeight="36.0" prefWidth="19.0" ripplerFill="#3c3c3c">
+                                 <graphic>
+                                    <ImageView fx:id="playSongsFromCurrentPlaylistButton" fitHeight="26.0" fitWidth="18.0">
+                                       <image>
+                                          <Image url="@Icons/playall.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </JFXButton>
+                           </children>
+                        </HBox>
+                        <JFXListView fx:id="playlistListView" prefHeight="503.0" prefWidth="1110.0" style="-fx-background-color: linear-gradient(to top, #141414, #171717, #191919, #1c1c1c, #1e1e1e, #212121, #242424, #272727, #2b2b2b, #2e2e2e, #323232, #363636); -fx-text-fill: white;" stylesheets="@style.css">
+                           <styleClass>
+                              <String fx:value="list-cell" />
+                              <String fx:value="list-view" />
+                           </styleClass>
+                           <contextMenu>
+                              <ContextMenu fx:id="contextMenu13" style="-fx-background-color: #242424; -fx-text-fill: white;">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Play" />
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Add to queue" />
+                                    <MenuItem fx:id="addToPlaylistMenuButton13" mnemonicParsing="false" onAction="#addToPlaylistMenuButtonPressed" style="-fx-text-fill: white;" text="Add to Playlist" />
+                                    <MenuItem mnemonicParsing="false" style="-fx-text-fill: white;" text="Remove from this Playlist" />
+                                 </items>
+                              </ContextMenu>
+                           </contextMenu>
+                        </JFXListView>
                      </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
                   </VBox>
-                  <JFXButton fx:id="nextSong" onMouseClicked="#nextButtonPressed" text=" ">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0">
-                           <image>
-                              <Image url="@Icons/icons8_end_25px_1.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
-                  <JFXButton fx:id="repeatButton" text=" ">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0">
-                           <image>
-                              <Image url="@Icons/icons8_repeat_25px.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </JFXButton>
                </children>
-               <padding>
-                  <Insets top="5.0" />
-               </padding>
-            </HBox>
-            <JFXButton fx:id="stopButton" layoutX="959.9999999999999" layoutY="14.0" onMouseClicked="#stop" prefHeight="18.0" prefWidth="25.0" text=" " AnchorPane.rightAnchor="286.0000000000001" AnchorPane.topAnchor="14.0">
-               <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0">
-                     <image>
-                        <Image url="@Icons/stopIcon.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </JFXButton>
-         </children>
-      </AnchorPane>
+            </AnchorPane>
+            <AnchorPane fx:id="lyricsPane" prefHeight="640.0" prefWidth="1110.0" style="-fx-background-color: #1b1b1c;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label fx:id="lyricsTextArea" alignment="CENTER" layoutX="230.0" layoutY="253.0" prefHeight="116.0" prefWidth="714.0" text=" " textFill="#dadada" />
+               </children>
+            </AnchorPane>
+         </children></AnchorPane>
    </children>
 </AnchorPane>
