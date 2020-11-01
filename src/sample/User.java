@@ -2,7 +2,7 @@ package client;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class User implements Serializable {        //this class is used to send and recieve userdata to server
     private String userName;
     private String password;
     private String firstName;
@@ -10,7 +10,7 @@ public class User implements Serializable {
     private String email;
 
 
-    User(String userName, String password, String firstName, String lastName, String email){
+    User(String userName, String password, String firstName, String lastName, String email) {
         this.userName = userName;
         this.password = password;
         this.firstName = firstName;
@@ -18,29 +18,36 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    User(String userName , String password){
+    User(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
-
-    public String getUserName(){
+    User()
+    {
+    //
+    }
+    public String getUserName() {
         return userName;
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
-    public String  getFirstName(){
+    public String getFirstName() {
         return firstName;
     }
 
-   public String getLastName(){
+    public String getLastName() {
         return lastName;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
 
+    public String toString()
+    {
+        return userName + " " + password + " " + firstName + " " + lastName + " " + email;
+    }
 }

@@ -36,7 +36,11 @@ public class SignUpController implements Initializable {
         if ("".equals(u) || "".equals(c_p) || "".equals(r_p) || "".equals(FirstName.getText()) || "".equals(LastName.getText()) || "".equals(Email.getText()))//if any filed is empty
         {
             warningLabel.setText( "Input Field cannot be empty");
-        } else {
+        }
+        else if(!Email.getText().contains("@")||!Email.getText().contains(".")||Email.getText().contains(" ")){
+            warningLabel.setText("Enter a valid Email id");
+        }
+        else {
 
             if (c_p.equals(r_p)) // if created password matches with re-entered password
             {

@@ -8,60 +8,55 @@ import java.io.Serializable;
 import java.security.spec.RSAOtherPrimeInfo;
 import java.util.List;
 
-public class AppData implements Serializable
-{
-    private String userName;
-    private String playlistName;
-    private String queryType;
-    private String name;
+public class AppData implements Serializable {
+    private String name1;
+    private String queryType;                     //class to send and receive data between server and client
+    private String name2;
     private String type;
 
 
-    AppData(String queryType){
-       this.queryType=queryType;
-    }
-
-    AppData(String queryType , String userName, String playlistName)
-    {
-        this.queryType =queryType;
-        this.userName = userName;
-        this.playlistName = playlistName;
-    }
-
-    AppData(String queryType,String userName)
-    {
+    AppData(String queryType) {
         this.queryType = queryType;
-        this.userName = userName;
     }
 
-    public void setName(String name){
-        this.name = name;
+    AppData(String queryType, String playlistName, String name) {
+        this.queryType = queryType;
+        this.name1 = playlistName;
+        this.name2 = name;
     }
 
-    public void setType(String type){
+    AppData(String queryType, String name) {
+        this.queryType = queryType;
+        this.name1 = name;
+    }
+
+    public String toString() {
+        return queryType + "." + name1 + "." + name2;
+    }
+
+
+    public void setName(String name) {
+        this.name2 = name;
+    }
+
+    public void setType(String type) {
         this.type = type;
     }
 
-    public String  getName(){
-        return this.name;
+    public String getName() {
+        return this.name2;
     }
 
-    public String getType(){
+    public String getType() {
         return this.type;
     }
 
-
-
-    public String getUserName()
-    {
-        return this.userName;
+    public String getQueryType() {
+        return this.queryType;
     }
 
-    public String getQueryType(){return this.queryType;}
-
-    public String getPlaylistName()
-    {
-        return this.playlistName;
+    public String getPlaylistName() {
+        return this.name1;
     }
 
 }

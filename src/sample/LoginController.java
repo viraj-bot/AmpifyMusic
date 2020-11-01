@@ -36,7 +36,7 @@ public class LoginController implements Initializable
         System.out.println(username.getText());
         System.out.println(password.getText());
         if (username.getText().isEmpty() || password.getText().isEmpty() || username.getText().isBlank() || password.getText().isBlank()) {
-            warningLabel.setText("Input field cannot be empty");
+            warningLabel.setText("Input field cannot be empty");                                    //to validate the username and password
         } else {
             try {
                 User user = new User(username.getText() , password.getText());
@@ -50,6 +50,7 @@ public class LoginController implements Initializable
                     currentUser = username.getText();
                     rootPane.getScene().getWindow().hide();
                     Stage homePage = new Stage();
+                    homePage.setTitle("Ampify");
                     Parent root = FXMLLoader.load(getClass().getResource("HomePage.fxml"));
                     homePage.setScene(new Scene(root, 1280, 720));
                     homePage.show();

@@ -38,34 +38,21 @@
                   <Font name="Calibri" size="22.0" />
                </font>
             </Label>
-            <JFXPasswordField fx:id="password" layoutX="60.0" layoutY="212.0" prefHeight="38.0" prefWidth="218.0" promptText="Password" style="-fx-text-fill: #b5b2b2;" unFocusColor="#ddd6d6">
-               <font>
-                  <Font name="Calibri" size="14.0" />
-               </font>
-            </JFXPasswordField>
-            <JFXButton buttonType="RAISED" layoutX="86.0" layoutY="307.0" onAction="#login" prefHeight="14.0" prefWidth="148.0" ripplerFill="#bfb8b8" style="-fx-background-color: #434242;" text="Login" textFill="#b2aeae" textOverrun="CLIP">
-               <font>
-                  <Font name="Calibri Bold" size="16.0" />
-               </font>
-            </JFXButton>
             <JFXTextField fx:id="username" layoutX="60.0" layoutY="152.0" prefHeight="38.0" prefWidth="218.0" promptText="Username" style="-fx-text-fill: #b5b2b2;" unFocusColor="#dad6d6">
                <font>
                   <Font name="Calibri" size="14.0" />
                </font>
             </JFXTextField>
-            <JFXButton layoutX="58.0" layoutY="375.0" onAction="#MoveToSignup" ripplerFill="BLACK" text="Don't have an account?    Register here" textFill="#8d8d8d" underline="true">
-               <font>
-                  <Font name="Calibri" size="12.0" />
-               </font>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </JFXButton>
             <ImageView layoutX="28.0" layoutY="167.0">
                <image>
                   <Image url="@Icons/icons8_customer_20px.png" />
                </image>
             </ImageView>
+            <JFXPasswordField fx:id="password" layoutX="60.0" layoutY="212.0" prefHeight="38.0" prefWidth="218.0" promptText="Password" style="-fx-text-fill: #b5b2b2;" unFocusColor="#ddd6d6">
+               <font>
+                  <Font name="Calibri" size="14.0" />
+               </font>
+            </JFXPasswordField>
             <ImageView layoutX="28.0" layoutY="227.0">
                <image>
                   <Image url="@Icons/icons8_lock_20px.png" />
@@ -76,6 +63,19 @@
                   <Font name="Calibri" size="12.0" />
                </font>
             </Label>
+            <JFXButton buttonType="RAISED" layoutX="86.0" layoutY="307.0" onAction="#login" prefHeight="14.0" prefWidth="148.0" ripplerFill="#bfb8b8" style="-fx-background-color: #434242;" text="Login" textFill="#b2aeae" textOverrun="CLIP">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+            </JFXButton>
+            <JFXButton layoutX="58.0" layoutY="375.0" onAction="#MoveToSignup" ripplerFill="BLACK" text="Don't have an account?    Register here" textFill="#8d8d8d" underline="true">
+               <font>
+                  <Font name="Calibri" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </JFXButton>
          </children></AnchorPane>
    </children>
 </AnchorPane>

@@ -2,7 +2,10 @@ package client;
 
 import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
-import javafx.scene.control.ContextMenu;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
@@ -12,9 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -22,195 +23,107 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
 
 public class HomeController implements Initializable {
-    String currentPlaylist , currentlyPlayingPlaylist , currentSong , currentUser;
-    FileChooser fileChooser = new FileChooser();
+    private String currentPlaylist, currentlyPlayingPlaylist, currentSong, currentTime2;
+    private FileChooser fileChooser = new FileChooser();
     private MediaPlayer mediaPlayer;
-    Boolean status = false , flag=true;
-    //private ObservableList<String> list = FXCollections.observableArrayList();
-    private List<File> fileList;
-    private List<File> fileList1;
-    private List<File> fileList2;
-   // private HashMap<String , List<File>> playlists = new HashMap<>();
-    int currentSelectedPane=3;
-    boolean equaliserIsFront = false , lyricsPaneIsFront = false , queuePaneIsFront = false ;
+    private Boolean status = false , flag=true , bool = true , isRepeatOn = false , isShuffleOn = false, equaliserIsFront = false , lyricsPaneIsFront = false , queuePaneIsFront = false ;
+    private List<File> fileList , fileList2 , fileList1;
     private ObservableList<String> playlistNames = FXCollections.observableArrayList();   //to store the names of playlists locally
     private ObservableList<String> queue = FXCollections.observableArrayList();
     private ObservableList<String> listOfSongsInPlaylist = FXCollections.observableArrayList();
     private ObservableList<String> localSongsQueue = FXCollections.observableArrayList();
     private ObservableList<String> localVideosQueue = FXCollections.observableArrayList();
-    Map<String, List<String>> lyrics = new HashMap<>();
-    Map<String, Long> endTime = new HashMap<>();
-    String currentTime2;
-    AudioEqualizer equalizer;
-    ObservableList<EqualizerBand> bands;
-
+    private ObservableList<String> likedSongs = FXCollections.observableArrayList();
+    private ObservableList<SongData> allLikedSongs = FXCollections.observableArrayList();
+    private ObservableList<SongData> songs = FXCollections.observableArrayList();
+    private ObservableList<String> songList = FXCollections.observableArrayList();
+    private ObservableList<EqualizerBand> bands;
+    private  Map<String, List<String>> lyrics = new HashMap<>();
+    private Map<String, Long> endTime = new HashMap<>();
+    private AudioEqualizer equalizer;
 
 
     @FXML
-    private JFXTextField lyricshere;
+    private  JFXButton songsPanePlayButton, createPlaylistButton, likeButton;
     @FXML
     private JFXToggleButton ONOFF;
     @FXML
-    private JFXSlider band0, band1, band2, band3, band4, band5, band6, band7, band8, band9;
+    private JFXSlider band0, band1, band2, band3, band4, band5, band6, band7, band8, band9, progressBar, volumeSlider;
     @FXML
-    private AnchorPane mediaViewPanel;
+    private AnchorPane mediaViewPanel, homePageSongsPane, localSongPane, homePagePane, playlistPane, lyricsPane, queuePane, songPane, playerControl, libraryPane, mainPane;
     @FXML
-    private Label totalSongNumber;
+    private Label totalSongNumber, libraryNameLabel, playlistNameLabel, songNameLabel ,homePageLabel, warningLabel;
     @FXML
-    private MenuItem menuPlayButton;
+    private JFXTextField searchField , searchField1 , tableSearchField, createPlaylistTextField, localSearchField;
     @FXML
-    private JFXButton addButton;
-    @FXML
-    private Label libraryNameLabel;
-    @FXML
-    private HBox selectPlaylistHbox;
-    @FXML
-    private HBox equaliserHBox;
-    @FXML
-    private JFXListView<String> playlistNameListView;
-    @FXML
-    private  JFXButton historyButton;
+    private JFXTextArea lyricsTextArea, nowPlayingLabel, trackLength, currentTimeLabel;
     @FXML
     private MediaView mediaView;
     @FXML
-    private AnchorPane sidePanel;
+    private HBox selectPlaylistHbox , equaliserHBox, createPlaylistHbox;
     @FXML
-    private AnchorPane rootPanel;
+    private JFXListView<String> playlistNameListView , selectPlaylistToAdd, songsListView, playlistListView, libraryListView, queueListView, localSongsListView;
     @FXML
-    private JFXListView<String> selectPlaylistToAdd;
+    private ImageView likeButtonImage, playImage , shuffleButtonImage , repeatButtonImage;
     @FXML
-    private AnchorPane homePagePane;
+    private  TableView<SongData> songsTableView;
     @FXML
-    private AnchorPane playlistPane;
+    private TableColumn<SongData,String> songNameCol ;
     @FXML
-    private AnchorPane lyricsPane;
+    private TableColumn<SongData,String> artistNameCol ;
     @FXML
-    private AnchorPane queuePane;
-    @FXML
-    private VBox playlistPaneVbox;
-    @FXML
-    private Label playlistNameLabel;
-    @FXML
-    private Label songNameLabel;
-    @FXML
-    private JFXTextField searchField , searchField1;
-    @FXML
-    private AnchorPane songPane;
-    @FXML
-    private JFXListView<String> songsListView;
-    @FXML
-    private JFXListView<String> playlistListView;
-    @FXML
-    private  JFXListView<String> libraryListView;
-    @FXML
-    private JFXTextArea lyricsTextArea;
-    @FXML
-    private AnchorPane libraryPane;
-    @FXML
-    private VBox libraryPaneVbox;
-    @FXML
-    private ScrollPane playlistsScrollPane;
-    @FXML
-    private JFXMasonryPane playlistsMasonryPane;
-    @FXML
-    private AnchorPane playerControl;
-    @FXML
-    private JFXSlider progressBar;
-    @FXML
-    private ImageView importButton;
-    @FXML
-    private JFXButton deletePlaylistButton;
-    @FXML
-    private ImageView playSongsFromCurrentPlaylistButton;
-    @FXML
-    private JFXSlider volumeSlider;
-    @FXML
-    private JFXListView<String> queueListView;
-    @FXML
-    private Label currentTimeLabel;
-    @FXML
-    private Label trackLength;
-    @FXML
-    private ImageView volumeImage;
-    @FXML
-    private JFXButton openButton;
-    @FXML
-    private JFXButton stopButton;
-    @FXML
-    private JFXButton playlistPlayButton;
-    @FXML
-    private ContextMenu libraryContextMenu;
-    @FXML
-    private Label nowPlayingLabel;
-    @FXML
-    private JFXButton playButton;
-    @FXML
-    private ImageView playImage;
-    @FXML
-    private HBox createPlaylistHbox;
-    @FXML
-    private JFXButton createPlaylistcloseButton;
-    @FXML
-    private JFXTextField createPlaylistTextField;
-    @FXML
-    private JFXButton createPlaylistButton ;
-    @FXML
-    private Label warningLabel;
+    private  TableColumn<SongData,JFXButton> buttonCol;
+
+
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        homePagePane.toFront();
-        progressBar.setValue(0);
-        disableEqualiser(true);
-        if(LoginController.getCurrentUser().equals(null))
-            currentUser = SignUpController.getCurrentUser();
-        else
-            currentUser = LoginController.getCurrentUser();
-       loadPlaylists();
-        playlistNameListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                //currentPlaylist = playlistNames.get(playlistNameListView.getSelectionModel().getSelectedIndex());
-               showPlaylist(playlistNameListView.getSelectionModel().getSelectedIndex());
-            }
-        });
+        homePagePane.toFront();          // to bring the home page to front
+        progressBar.setValue(0);        //to set media player seek bar to zero
+        disableEqualiser(true);     //to disable the equaliser
+        loadPlaylists();                   //to display all the playlists created by the user
 
+        //setting up all the columns of the table view
+        songNameCol.setCellValueFactory(new PropertyValueFactory<SongData , String>("songName"));
+        artistNameCol.setCellValueFactory(new PropertyValueFactory<SongData,String>("artistName"));
+        buttonCol.setCellValueFactory(new PropertyValueFactory<SongData,JFXButton>("button"));
+
+        //calling scan function to scan users D drive to get all the local songs
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                fileList = new ArrayList<>();
+                fileList1 = new ArrayList<>();
                 scanSongs("D:\\");
             }
         };
         Thread th = new Thread(r);
         th.start();
 
+        //calling scan function to scan users D drive to get all the local videos
         Runnable r3 = new Runnable() {
             @Override
             public void run() {
                 fileList2 = new ArrayList<>();
-
                 scanVideos("D:\\");
-                scanVideos("E:\\");
-
             }
         };
         Thread t = new Thread(r3);
         t.start();
     }
 
+    //playpause function to perform action as soon as user presses the play button in media controller
     public void playpause() {
-        if (status) {
+        if (status) {               //checking status if music is already playing
             mediaPlayer.pause();
             status = false;
             try {
@@ -227,10 +140,36 @@ public class HomeController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 
+    //to turn on shuffle mode (get randomised order of songs in the currently playing playlist)
+    public void shuffleButtonPressed() throws FileNotFoundException {
+        if(isShuffleOn){
+            System.out.println("turned off shuffle");
+            shuffleButtonImage.setImage(new Image(new FileInputStream("src/client/Icons/shuffle.png")));
+            isShuffleOn = false;
+        }
+        else {
+            System.out.println("turned on shuffle");
+            shuffleButtonImage.setImage(new Image(new FileInputStream("src/client/Icons/shuffleGreen.png")));
+            isShuffleOn = true;
+        }
+    }
+
+    //to turn on the repeat mode to run a song on loop
+    public void repeatButtonPressed() throws FileNotFoundException {
+        if(isRepeatOn){
+            repeatButtonImage.setImage(new Image(new FileInputStream("src/client/Icons/repeat.png")));
+            isRepeatOn = false;
+        }
+        else {
+            repeatButtonImage.setImage(new Image(new FileInputStream("src/client/Icons/repeatGreen.png")));
+            isRepeatOn = true;
+        }
+    }
+
+    //to bring equaliser to the front
     public void equaliserButtonPressed(){
         if(equaliserIsFront){
             equaliserHBox.toBack();
@@ -242,10 +181,12 @@ public class HomeController implements Initializable {
         }
     }
 
+    //to close equaliser i.e. sending it to the back
     public void equaliserCloseButtonPressed(){
         equaliserHBox.toBack();
     }
 
+    //to disable equaliser
     private  void disableEqualiser(Boolean bool){
         band0.setDisable(bool);
         band1.setDisable(bool);
@@ -257,11 +198,22 @@ public class HomeController implements Initializable {
         band7.setDisable(bool);
         band8.setDisable(bool);
         band9.setDisable(bool);
+        band0.setValue(50);
+        band1.setValue(50);
+        band2.setValue(50);
+        band3.setValue(50);
+        band4.setValue(50);
+        band5.setValue(50);
+        band6.setValue(50);
+        band7.setValue(50);
+        band8.setValue(50);
+        band9.setValue(50);
     }
 
+    //functionality for equaliser as soon as user enables it
     public void equaliserOnOff() {
         if (ONOFF.isSelected()) {
-            disableEqualiser(false);
+            disableEqualiser(false);            //to enable equalizer as soon as it is enabled
             System.out.println("Equilizer is ON");
             equalizer = mediaPlayer.getAudioEqualizer();
             equalizer.setEnabled(true);
@@ -276,6 +228,8 @@ public class HomeController implements Initializable {
             bands.get(7).setGain(band7.getValue() / 100 * 24 - 12);
             bands.get(8).setGain(band8.getValue() / 100 * 24 - 12);
             bands.get(9).setGain(band9.getValue() / 100 * 24 - 12);
+
+            //setting up listeners for all the frequency bands
             band0.setOnMouseClicked(Event -> bands.get(0).setGain(band0.getValue() / 100 * 24 - 12));
             band0.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
@@ -410,118 +364,166 @@ public class HomeController implements Initializable {
             } else {
                 System.out.println("Equilizer is OFF");
                 disableEqualiser(true);
-                band0.setValue(50);
-                band1.setValue(50);
-                band2.setValue(50);
-                band3.setValue(50);
-                band4.setValue(50);
-                band5.setValue(50);
-                band6.setValue(50);
-                band7.setValue(50);
-                band8.setValue(50);
-                band9.setValue(50);
                 equalizer.setEnabled(false);
                 equalizer = null;
             }
         }
 
+        //As soon as repeat is turned on this function becomes active and checks that the song is played on loop
+        public  void repeat(){
+        int trackno;
+           if(currentlyPlayingPlaylist == "local"){
+               trackno = queue.indexOf(currentSong);
+               jumpTrack(trackno , fileList);
+           }
+           else if(currentlyPlayingPlaylist == "localSongs"){
+               trackno = localSongsQueue.indexOf(currentSong);
+               jumpTrack(trackno , fileList1);
+           }
+           else if(currentlyPlayingPlaylist == "localVideos"){
+               trackno = localVideosQueue.indexOf(currentSong);
+               jumpTrack(trackno , fileList2);
+           }
+           else {
+               trackno = queue.indexOf(currentSong);
+               handlePlay(queue.get(trackno));
+           }
+        }
 
+
+    //this method is to set up the functionality of next button on media controller in case of different playlists
+    // as well as for the shuffle mode
     public void nextButtonPressed(){
         if(currentlyPlayingPlaylist == "local")
         {
+            int trackno=0 ;
             System.out.println(currentSong);
-            int trackno = queue.indexOf(currentSong) + 1;
+            if(isShuffleOn){
+                Random rand = new Random();
+                System.out.println("size of queue" + queue.size());
+                trackno = rand.nextInt(queue.size());
+                System.out.println("random integer:" + trackno);
+            }
+            else{
+                trackno = queue.lastIndexOf(currentSong) + 1;
+            }
             if(trackno == queue.size())
             {  trackno = 0;  }
             System.out.println(trackno);
             jumpTrack(trackno , fileList);
-            queueListView.getSelectionModel().select(trackno);
         }
         else if(currentlyPlayingPlaylist == "localSongs")
         {
+            int trackno = 0 ;
             System.out.println(currentSong);
-            int trackno = localSongsQueue.indexOf(currentSong) + 1;
-            if(trackno == localSongsQueue.size())
+           if(isShuffleOn){
+                Random rand = new Random();
+                System.out.println("size of queue" + localSongsQueue.size());
+               trackno = rand.nextInt(localSongsQueue.size());
+               System.out.println("random integer:" + trackno);
+            }
+           else{
+                trackno = localSongsQueue.lastIndexOf(currentSong) + 1;
+            }
+           if(trackno == localSongsQueue.size())
             {  trackno = 0;  }
-            System.out.println(trackno);
+            System.out.println("track no . : " + trackno);
             jumpTrack(trackno , fileList1);
-            songsListView.getSelectionModel().select(trackno);
         }
         else if(currentlyPlayingPlaylist == "localVideos")
-        {
+        {   int trackno;
             System.out.println(currentSong);
-            int trackno = localVideosQueue.indexOf(currentSong) + 1;
+            if(isShuffleOn){
+                Random rand = new Random();
+                System.out.println("size of queue" + localVideosQueue.size());
+                trackno = rand.nextInt(localVideosQueue.size());
+                System.out.println("random integer:" + trackno);
+            }
+            else{
+                trackno = localVideosQueue.lastIndexOf(currentSong) + 1;
+            }
             if(trackno == localVideosQueue.size())
             {
                 trackno = 0;
             }
             System.out.println(trackno);
             jumpTrack(trackno , fileList2);
-            songsListView.getSelectionModel().select(trackno);
         }
         else{
-            int trackno = queue.indexOf(currentSong) + 1;
+            int trackno;
+            if(isShuffleOn) {
+                Random rand = new Random();
+                System.out.println("size of queue" + queue.size());
+                trackno = rand.nextInt(queue.size());
+                System.out.println("random integer:" + trackno);
+            }
+           else{
+                trackno = queue.lastIndexOf(currentSong) + 1;
+            }
             if(trackno == queue.size())
             {
                 trackno = 0;
             }
+            System.out.println("trackno " +trackno + queue.get(trackno));
             handlePlay(queue.get(trackno));
-            queueListView.getSelectionModel().select(trackno);
         }
     }
 
+    //This method is to set up the funtionality for previous button on the media contoller in case of different playlists
     public void previousButtonPressed(){
         if(currentlyPlayingPlaylist == "local"){
             System.out.println(currentSong);
-            int trackno = queue.indexOf(currentSong) - 1;
+            int trackno = queue.lastIndexOf(currentSong) - 1;
             if(trackno<0)
             {  trackno = 0;  }
             System.out.println(trackno);
             jumpTrack(trackno , fileList);
-            queueListView.getSelectionModel().select(trackno);
         }
         else if(currentlyPlayingPlaylist == "localSongs") {
-            int trackno = localSongsQueue.indexOf(currentSong) - 1;
+            int trackno = localSongsQueue.lastIndexOf(currentSong) - 1;
             if (trackno < 0) {
                 trackno = 0;
             }
-            songsListView.getSelectionModel().select(trackno);
             jumpTrack(trackno, fileList1);
         }
         else if(currentlyPlayingPlaylist == "localVideos") {
-            int trackno = localVideosQueue.indexOf(currentSong) - 1;
+            int trackno = localVideosQueue.lastIndexOf(currentSong) - 1;
             if (trackno < 0) {
                 trackno = 0;
             }
-            songsListView.getSelectionModel().select(trackno);
             jumpTrack(trackno, fileList2);
         }
         else{
-            int trackno = queue.indexOf(currentSong) - 1;
+            int trackno = queue.lastIndexOf(currentSong) - 1;
             if(trackno < 0){
                 trackno = 0;
             }
             handlePlay(queue.get(trackno));
-            queueListView.getSelectionModel().select(trackno);
         }
     }
 
+    //it sets up functionality for the stop button on media controller
     public void stop() {
         mediaPlayer.stop();
         mediaPlayer.dispose();
         lyricsTextArea.clear();
-        status = false;
+        flag = false;       //this is a flag variable to stop the while loop in display lyrics function as soon as stop button is pressed
+        lyrics.clear();
+        endTime.clear();
+        status = false;        //this is to set playing status to false
         try {
-            playImage.setImage(new Image(new FileInputStream("src/client/Icons/playIcon.png")));
+            playImage.setImage(new Image(new FileInputStream("src/sample/Icons/playIcon.png")));
         } catch (Exception e) {
             e.printStackTrace();
         }
         nowPlayingLabel.setText("");
         trackLength.setText("");
         currentTimeLabel.setText("");
-        mediaViewPanel.toBack();
+        if (currentlyPlayingPlaylist == "local" || currentlyPlayingPlaylist == "localVideos")
+            mediaViewPanel.toBack();
     }
 
+    //this method converts seconds to minutes:seconds format
     public String getSecondsToSimpleString(double userSeconds) {
         double mins = userSeconds / 60;
         String minsStr = mins + "";
@@ -535,20 +537,30 @@ public class HomeController implements Initializable {
         return str1 + ":" + str2;
     }
 
+    //this method is used to display list of all the local songs
     public void localSongsButtonPressed(MouseEvent mouseEvent) {
-        songPane.toFront();
-        songsListView.setItems(localSongsQueue);
-        songsListView.getSelectionModel().select(0);
-        songsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        searchListView = null;
+        localSongPane.toFront();
+        localSongsListView.setItems(localSongsQueue);
+        localSongsListView.getSelectionModel().select(0);
+        searchListView = localSongsListView;
+        final int[] index = new int[1];
+        localSongsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 currentlyPlayingPlaylist = "localSongs";
-                jumpTrack(songsListView.getSelectionModel().getSelectedIndex() , fileList1);
+                System.out.println(localSongsListView.getSelectionModel().getSelectedItem());
+                for (File x : fileList1) {
+                    if (x.toPath().toString().contains(localSongsListView.getSelectionModel().getSelectedItem())) {
+                        index[0] = fileList1.indexOf(x);
+                    }
+                }
+                jumpTrack(index[0], fileList1);
             }
         });
-
     }
 
+    //this function is called at initialisation and it scans and stores users local songs to filelist1
     public void scanSongs(String p) {
         File f = new File(p);
         File[] fl = f.listFiles();
@@ -573,21 +585,30 @@ public class HomeController implements Initializable {
 
     }
 
-    @FXML
-    void localVideosButtonPressed(MouseEvent event) {
-        songPane.toFront();
-        songsListView.setItems(localVideosQueue);
-        songsListView.getSelectionModel().select(0);
-        songsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    //this method is called to display list of all scanned local videos
+    public void localVideosButtonPressed(MouseEvent event) {
+        searchListView = null;
+        localSongPane.toFront();
+        localSongsListView.setItems(localVideosQueue);
+        localSongsListView.getSelectionModel().select(0);
+        searchListView = localSongsListView;
+        final int[] index = new int[1];
+        localSongsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 currentlyPlayingPlaylist = "localVideos";
-                jumpTrack(songsListView.getSelectionModel().getSelectedIndex() , fileList2 );
+                System.out.println(localSongsListView.getSelectionModel().getSelectedItem());
+                for (File x : fileList2) {
+                    if (x.toPath().toString().contains(localSongsListView.getSelectionModel().getSelectedItem())) {
+                        index[0] = fileList2.indexOf(x);
+                    }
+                }
+                jumpTrack(index[0], fileList2);
             }
         });
-
     }
 
+    //this function is called at initialisation and it scans and stores users local videos to filelist2
     private void scanVideos(String s) {
         File f = new File(s);
         File[] fl = f.listFiles();
@@ -610,20 +631,19 @@ public class HomeController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
-
+    //this method allows user to open filechooser and select any local song or video to play
     public void openSong() {
         if (fileList != null) {
             if (!fileList.isEmpty()) {
-                File existDirectory = fileList.get(0).getParentFile();
+                File existDirectory = fileList.get(0).getParentFile();   // to open filechooser from previous directory if any
                 fileChooser.setInitialDirectory(existDirectory);
             }
         }
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Select files", "*.mp3", "*.mp4", "*.wav");
         fileChooser.getExtensionFilters().add(filter);
+        queue.clear();
         fileList = fileChooser.showOpenMultipleDialog(null);
         for (File value : fileList) {
             queue.add(value.getName());
@@ -640,12 +660,18 @@ public class HomeController implements Initializable {
         });
     }//openFile() method closed here
 
+
+    //this method is used to play any local song or video
     void playLocalSong(File f) {
+        ONOFF.setSelected(false);   //to disable equaliser
+        disableEqualiser(true);
         String fileName, path, fileExtension;
         path = f.toURI().toString();
         Media media = new Media(path);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
+        likeButton.setVisible(false);
+        likeButton.setDisable(true);
         try {
             playImage.setImage(new Image(new FileInputStream("src/client/Icons/pauseIcon.png")));
         } catch (Exception e) {
@@ -672,11 +698,12 @@ public class HomeController implements Initializable {
         setPlayer(media);
     }//playLocalSong method ends here
 
+    //this method is used to jump from one local song to other
     public void jumpTrack(int index , List<File> listOfFiles) {
         File file = null;
-        System.out.println(index);
+        System.out.println("index from jump track : " + index);
         if (status) {
-            mediaPlayer.stop();
+            stop();
         }
         try {
             file = listOfFiles.get(index);
@@ -689,120 +716,140 @@ public class HomeController implements Initializable {
         }
     }//jumpTrack() method closed here
 
+
+    // this method is used to set listeners to all the ui components of the media controller
     void setPlayer(Media media) {
-        volumeSlider.setValue(mediaPlayer.getVolume() * 100);
-        volumeSlider.valueProperty().addListener(new InvalidationListener() {
+        volumeSlider.setValue(mediaPlayer.getVolume() * 100);       //set volume to 100
+        volumeSlider.valueProperty().addListener(new InvalidationListener() {   // to check if volume slider is moved
             @Override
             public void invalidated(Observable observable) {
                 mediaPlayer.setVolume(volumeSlider.getValue() / 100);
             }
         });
 
-        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {    //to set the seek bar moving while media is playing
                     progressBar.setValue(newValue.toSeconds());
                     currentTimeLabel.setText("" + getSecondsToSimpleString(newValue.toSeconds()));
                 }
         );
 
-        progressBar.setOnMousePressed(new EventHandler<MouseEvent>() {
+        progressBar.setOnMousePressed(new EventHandler<MouseEvent>() {    //to seek if seek bar  is pressed at any point
             @Override
             public void handle(MouseEvent event) {
                 mediaPlayer.seek(Duration.seconds(progressBar.getValue()));
             }
         });
 
-        progressBar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+        progressBar.setOnMouseDragged(new EventHandler<MouseEvent>() {   //to seek when seekbar is dragged
             @Override
             public void handle(MouseEvent event) {
                 mediaPlayer.seek(Duration.seconds(progressBar.getValue()));
             }
         });
 
-        mediaPlayer.setOnReady(new Runnable() {
+        mediaPlayer.setOnReady(new Runnable() {   //to set track length to seek bar when media is ready
             @Override
             public void run() {
                 Duration total = media.getDuration();
                 trackLength.setText(getSecondsToSimpleString(total.toSeconds()));
                 progressBar.setMax(total.toSeconds());
-
             }
         });
 
-        mediaPlayer.setOnEndOfMedia(new Runnable() {
+        mediaPlayer.setOnEndOfMedia(new Runnable() {   //to call the nextButtonPressed or repeat method at end of media
             @Override
             public void run() {
-                nextButtonPressed();
+                if(isRepeatOn){
+                    repeat();
+                }
+                else {
+                    nextButtonPressed();
+                }
             }
         });
     }//setPlayer method ends here
 
 
-    public  void handlePlay(String songName){
-        currentSong = songName;
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                AppData playSong = new AppData("playSong");
+    //This method is used to recieve songs from server and sends it to play method
+        public void handlePlay(String songName)
+        {
+            ONOFF.setSelected(false);
+            disableEqualiser(true);
+            currentSong = songName;
+            getLikedSongs();
+            likeButton.setVisible(true);
+            likeButton.setDisable(false);
+            if (likedSongs.contains(songName)) {
                 try {
-                    Main.clientOutputStream.writeObject(playSong);
-                    Main.clientOutputStream.writeObject(songName);
-                    byte[] tuneAsBytes = (byte[]) Main.clientInputStream.readObject();
-                    File tempMp3 = File.createTempFile("music", ".ampify");
-                    FileOutputStream fos = new FileOutputStream(tempMp3);
-                    fos.write(tuneAsBytes);
-                    System.out.println(tempMp3.getAbsolutePath());
-                    System.out.println(tempMp3.toURI().toString());
-                    System.out.println("here 21");
-                    tempMp3.deleteOnExit();
-                    System.out.println(("moving to play method"));
-                    play(tempMp3.toURI().toString(), songName);
-                    File tempMp3lyrics = null;
-                    Main.clientOutputStream.writeObject(songName);
-                    try {
-                        byte[] lyricsAsBytes = (byte[]) Main.clientInputStream.readObject();
-                        tempMp3lyrics = File.createTempFile("music", ".tmp");
-                        System.out.println("here 26");
-                        FileOutputStream fos2 = new FileOutputStream(tempMp3lyrics);
-                        fos2.write(lyricsAsBytes);
-                        tempMp3lyrics.deleteOnExit();
-                        System.out.println(tempMp3lyrics.getAbsolutePath());
-                        lyricsToHashMap(tempMp3lyrics.toPath().toString());
-                    } catch (Exception e) {
-                        System.out.println("NULL pointer exceprion found in handleplay");
-                        lyricsTextArea.setText("No Lyrics Found For This Song");
-                        tempMp3lyrics.delete();
-                    }
+                    likeButtonImage.setImage(new Image(new FileInputStream("src/sample/Icons/heartSelected.png")));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    likeButtonImage.setImage(new Image(new FileInputStream("src/sample/Icons/heart.png")));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        };
-        Thread t = new Thread(r);
-        t.setDaemon(true);
-        t.start();
+            currentSong = songName;                     //as sson as a new song is played the value of current song is changed
+            AppData playSong = new AppData("playSong", songName);
+            try {
+                lyrics = new HashMap<>();
+                endTime = new HashMap<>();
+                Main.clientOutputStream.writeObject(playSong);
+                byte[] tuneAsBytes = (byte[]) Main.clientInputStream.readObject();           //getting the song from server in bytes format
+                File tempMp3 = File.createTempFile("music", ".ampify");
+                FileOutputStream fos = new FileOutputStream(tempMp3);
+                fos.write(tuneAsBytes);
+                System.out.println(tempMp3.getAbsolutePath());
+                System.out.println(tempMp3.toURI().toString());
+                play(tempMp3.toURI().toString(), songName);
+                System.out.println("here 21");
+                tempMp3.deleteOnExit();
+                System.out.println(("moving to play method"));
 
-    }
+                File tempMp3lyrics = null;
+                Main.clientOutputStream.writeObject(songName);
+                try {
+                    byte[] lyricsAsBytes = (byte[]) Main.clientInputStream.readObject();  //getting the lyrics from server in byte format
+                    tempMp3lyrics = File.createTempFile("music", ".tmp");
+                    System.out.println("here 26");
+                    FileOutputStream fos2 = new FileOutputStream(tempMp3lyrics);
+                    fos2.write(lyricsAsBytes);
+                    System.out.println(tempMp3lyrics.getAbsolutePath());
+                    lyricsToHashMap(tempMp3lyrics.toPath().toString());
+                } catch (Exception e) {
+                    System.out.println("NULL pointer exceprion found in handleplay");
+                    lyricsTextArea.setText("    No  Lyrics  Available  For  This  Song ");
+                    tempMp3lyrics.delete();
+                    lyrics = null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-    public void lyricsButtonPressed(){
-        if(lyricsPaneIsFront){
+    //to bring the lyrics text area to front when show lyrics button is pressed
+    public void lyricsButtonPressed() {
+        if (lyricsPaneIsFront) {
             lyricsPane.toBack();
             lyricsPaneIsFront = false;
         }
-        else{
+        else if(!lyricsPaneIsFront){
             lyricsPane.toFront();
             lyricsPaneIsFront = true;
         }
     }
 
-
+    //this method reads the lyrics frfom the temporary file and stores it ti a hashmap where key is the start timestamp
     public void lyricsToHashMap(String path) {
-
         try {
             File file = new File(path);
             BufferedReader bufRdr = new BufferedReader(new FileReader(file));
             String str, index;
             while ((bufRdr.readLine()) != null) {
-                List<String> content = new ArrayList<String>();
+                List<String> content = new ArrayList<>();
                 String completetime = bufRdr.readLine();
                 String endtime = completetime.substring(completetime.indexOf('>') + 2, completetime.indexOf('>') + 12);
                 String starttime;
@@ -814,30 +861,13 @@ public class HomeController implements Initializable {
                 }
                 lyrics.put(starttime, content);
             }
-            displayLyrics();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void displayLyrics() throws InterruptedException {
-        Thread.sleep(1000);
-        while (flag) {
-            try {
-                if (lyrics.containsKey(currentTime2)) {
-                    System.out.println(currentTime2);
-                    String s = String.valueOf(lyrics.get(currentTime2));
-                    System.out.println(s);
-                    lyricsTextArea.setText(s);
-                    Thread.sleep(endTime.get(currentTime2));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        flag = true;
-    }
-
+    //this method sleeps the display lyrics funtion tiil the time music plays
     private Long sleepTime(String starttime, String endtime) {
         long stime;
         Long etime;
@@ -856,7 +886,7 @@ public class HomeController implements Initializable {
         return (etime - stime);
     }
 
-
+    //this method converts seconds to minute:seconds format
     public String getSecondsToString(double userSeconds) {
         double mins = userSeconds / 60;
         String minsStr = mins + "";
@@ -877,11 +907,39 @@ public class HomeController implements Initializable {
         return "00" + ":" + str1 + ":" + str2 + "," + milli;
     }
 
+    //this method displays lyrics from the hashmap
+  public void displayLyrics(){
+        if (lyrics != null) {
+            while (flag && bool) {
+                try {
+                    System.out.println("here1");
+                    if (lyrics.containsKey(currentTime2)) {
+                        System.out.print("here2");
+                        String s = String.valueOf(lyrics.get(currentTime2));
+                        System.out.print("here3");
+                        System.out.println(s);
+                        System.out.print("here4");
+                        lyricsTextArea.setText(s);
+                        System.out.print("here5");
+                        Thread.sleep(endTime.get(currentTime2));
+                        System.out.print("here6");
+                    }
+                } catch (Exception e) {
+                    System.out.println("here7");
+                    e.printStackTrace();
+                    System.out.println("here8");
+                }
+            }
+        }
+        System.out.println("OUT");
+        flag = true;
+    }
+
+    //this method plays the song recieved from the server
+    Thread t;
     public void play(String s, String songName) {
         System.out.println("entered play method");
-        addToHistory(songName);
-        if(status)
-        {
+        if (status) {   //to check if song is already playing
             stop();
             flag = false;
             lyrics.clear();
@@ -889,22 +947,51 @@ public class HomeController implements Initializable {
             lyricsTextArea.clear();
         }
         currentSong = songName;
-        //nowPlayingLabel.setText("Now Playing-\n" + songName);
+        nowPlayingLabel.setText("Now Playing-\n" + songName);
         Media media = new Media(s);
         mediaPlayer = new MediaPlayer(media);
         System.out.println("playing song");
         playpause();
-        status=true;
+        status = true;
         setPlayer(media);
-        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) ->
-                {
+        mediaPlayer.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
                     currentTime2 = getSecondsToString(newValue.toSeconds());
                 }
         );
+
+        mediaPlayer.statusProperty().addListener((observable, oldValue, newValue) ->   //manipulating the values of flag and bool to stop
+        {                                                                               //the while loop in the display lyrics method
+            System.out.println("mediaplayer status " + mediaPlayer.getStatus());
+          try {
+                switch (mediaPlayer.getStatus()) {
+                    case PLAYING: {
+                        bool = true;
+                        flag = true;
+
+                        Runnable r = new Runnable() {
+                            @Override
+                            public void run() {
+                                displayLyrics();
+                            }
+                        };
+                        t = new Thread(r);
+                        t.setDaemon(true);
+                        t.start();
+                    }
+                    break;
+                    default: {
+                        bool = false;
+                    }
+                }
+            } catch (NullPointerException e) {
+
+        }
+
+        });
     }
 
-
-   public void createPlaylist(){
+   //this method creates a new playlist and adds it to server
+    public void createPlaylist(){
       createPlaylistHbox.toFront();
       createPlaylistTextField.setText(null);
       warningLabel.setText(null);
@@ -920,7 +1007,7 @@ public class HomeController implements Initializable {
                 else {
                     playlistNames.add(createPlaylistTextField.getText());
                    try{
-                       AppData createPlaylistData = new AppData("CreatePlaylist" , currentUser , createPlaylistTextField.getText());
+                       AppData createPlaylistData = new AppData("CreatePlaylist" ,  createPlaylistTextField.getText());
                        Main.clientOutputStream.writeObject(createPlaylistData);
                    }catch(Exception e){
                        e.printStackTrace();
@@ -938,10 +1025,12 @@ public class HomeController implements Initializable {
       });
     }//CreatePlaylist method ends here
 
+
+    //this method is called at intialisation ti load all the user playlists from the server
     public void loadPlaylists(){
         try{
             System.out.println("Sending username to server to get playlist names");
-            AppData loadPlaylistData = new AppData("loadPlaylists",currentUser);
+            AppData loadPlaylistData = new AppData("loadPlaylists");
             Main.clientOutputStream.writeObject(loadPlaylistData);
             System.out.println("reading playlist names from server");
             String playlistName;
@@ -950,6 +1039,12 @@ public class HomeController implements Initializable {
                 playlistNames.add(playlistName);
             }
             playlistNameListView.setItems(playlistNames);
+            playlistNameListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    showPlaylist(playlistNameListView.getSelectionModel().getSelectedIndex());
+                }
+            });
         }catch(Exception e){
             e.printStackTrace();
             System.out.println("Error loading playlists");
@@ -957,33 +1052,32 @@ public class HomeController implements Initializable {
 
     }//loadPlaylists method ends here
 
+    //this method shows the songs in playlist
     public void showPlaylist(int i){
         listOfSongsInPlaylist.clear();
         playlistListView.setDisable(false);
         playlistPane.toFront();
-        if(currentPlaylist != playlistNames.get(i))
-        {
-            currentPlaylist = playlistNames.get(i);
-            playlistNameLabel.setText(currentPlaylist);
-            try {
-                AppData showPlaylistData = new AppData("showPlaylist", currentUser , currentPlaylist);
-                Main.clientOutputStream.writeObject(showPlaylistData);
-                System.out.println("Reading list of songs in playlist from server");
-                String songName;
-                while (!"".equals(songName = Main.clientInputStream.readUTF())){
-                    System.out.println("Song Name : "+ songName);
-                    listOfSongsInPlaylist.add(songName);
-                }
-                if(listOfSongsInPlaylist.size()>0)
-                    totalSongNumber.setText("Number of songs : " + listOfSongsInPlaylist.size());
-                else
-                    totalSongNumber.setText("It is lonely here!");
-                playlistListView.setItems(listOfSongsInPlaylist);
-                playlistListView.getSelectionModel().select(0);
-                playlistListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+        currentPlaylist = playlistNames.get(i);
+        playlistNameLabel.setText(currentPlaylist);
+        try {
+            AppData showPlaylistData = new AppData("showPlaylist", currentPlaylist);
+            Main.clientOutputStream.writeObject(showPlaylistData);
+            System.out.println("Reading list of songs in playlist from server");
+            String songName;
+            while (!"".equals(songName = Main.clientInputStream.readUTF())){
+                System.out.println("Song Name : "+ songName);
+                listOfSongsInPlaylist.add(songName);
+            }
+            if(listOfSongsInPlaylist.size()>0)
+                totalSongNumber.setText("Number of songs : " + listOfSongsInPlaylist.size());
+            else
+                totalSongNumber.setText("It is lonely here!");
+            playlistListView.setItems(listOfSongsInPlaylist);
+            playlistListView.getSelectionModel().select(0);
+            playlistListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if(mouseEvent.getButton() == MouseButton.PRIMARY) {
                             currentlyPlayingPlaylist = currentPlaylist ;
                             queue.clear();
                             currentSong = playlistListView.getSelectionModel().getSelectedItem();
@@ -995,13 +1089,13 @@ public class HomeController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Unable to open playlist");
-            }
         }
     }//showPlaylists method ends here
 
+    //this method is used to delete a playlist from client and server side both
     public void deletePlaylist(){
         try {
-            AppData deletePlaylist = new AppData("deletePlaylist",currentUser , currentPlaylist);
+            AppData deletePlaylist = new AppData("deletePlaylist", currentPlaylist);
             Main.clientOutputStream.writeObject(deletePlaylist);
             System.out.println("delete data sent successfully");
             playlistNames.remove(currentPlaylist);
@@ -1012,14 +1106,34 @@ public class HomeController implements Initializable {
         }
     }
 
+    //this method is used to play the complete playlist
     public void playlistPlayButtonPressed(){
         System.out.println("list of songs" + listOfSongsInPlaylist);
         queue.clear();
         queue.addAll(listOfSongsInPlaylist) ;
         currentlyPlayingPlaylist = currentPlaylist ;
-        playlistListView.getSelectionModel().select(0);
-        handlePlay(playlistListView.getSelectionModel().getSelectedItem());
+        handlePlay(queue.get(0));
         System.out.println("queue:"+ queue);
+    }
+
+    //this method is used to play all the library songs
+    public void libraryPlayButtonPressed(){
+        queue.clear();
+        queue.addAll(songList);
+        currentlyPlayingPlaylist = "queue" ;
+        handlePlay(queue.get(0));
+    }
+
+    //this method is used to play all songs at any home page playlist
+    public  void homePagePlayButtonPressed(){
+        queue.clear();
+        int i;
+        for(i=0; i<songs.size();i++)
+        {
+            queue.add(songs.get(i).getSongName());
+        }
+        currentlyPlayingPlaylist = "queue";
+        handlePlay(queue.get(0));
     }
 
 
@@ -1039,7 +1153,7 @@ public class HomeController implements Initializable {
         addToPlaylistMenuButtonPressed(playlistListView);
     }
 
-
+   //this button adds the listview song to selected playlist
     public void addToPlaylistMenuButtonPressed(JFXListView<String> listview){
         selectPlaylistHbox.toFront();
         selectPlaylistToAdd.setItems(playlistNames);
@@ -1049,7 +1163,7 @@ public class HomeController implements Initializable {
                 System.out.println(playlistListView.getSelectionModel().getSelectedItem());
                 System.out.println(selectPlaylistToAdd.getSelectionModel().getSelectedItem());
                 try{
-                    AppData addSongToPlaylist = new AppData("addSongToPlaylist", currentUser , selectPlaylistToAdd.getSelectionModel().getSelectedItem() , listview.getSelectionModel().getSelectedItem())  ;
+                    AppData addSongToPlaylist = new AppData("addSongToPlaylist",  selectPlaylistToAdd.getSelectionModel().getSelectedItem() , listview.getSelectionModel().getSelectedItem())  ;
                     Main.clientOutputStream.writeObject(addSongToPlaylist);
                     selectPlaylistHbox.toBack();
                 }catch(Exception e ){
@@ -1059,8 +1173,35 @@ public class HomeController implements Initializable {
         });
     }
 
+    //this method also adds the song from the tableview to selected playlist
+    public void tableAddToPlaylistButtonPressed(){
+        selectPlaylistHbox.toFront();
+        selectPlaylistToAdd.setItems(playlistNames);
+        selectPlaylistToAdd.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                System.out.println(songsTableView.getSelectionModel().getSelectedItem().getSongName());
+                System.out.println(selectPlaylistToAdd.getSelectionModel().getSelectedItem());
+                try{
+                    AppData addSongToPlaylist = new AppData("addSongToPlaylist",  selectPlaylistToAdd.getSelectionModel().getSelectedItem() , songsTableView.getSelectionModel().getSelectedItem().getSongName()) ;
+                    Main.clientOutputStream.writeObject(addSongToPlaylist);
+                    selectPlaylistHbox.toBack();
+                }catch(Exception e ){
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
+    //this method removes the particular song from playlist
+    public void removeFromPlaylistButtonPressed() throws IOException {
+        String songToRemove = playlistListView.getSelectionModel().getSelectedItem();
+        AppData removeFromPlaylist = new AppData("removeFromPlaylist" , playlistNameListView.getSelectionModel().getSelectedItem() , songToRemove );
+        Main.clientOutputStream.writeObject(removeFromPlaylist);
+        listOfSongsInPlaylist.remove(songToRemove);
+    }
 
+    //this method opens the playing queue
     public void queueButtonPressed(){
         if(queuePaneIsFront){
             queuePane.toBack();
@@ -1085,47 +1226,105 @@ public class HomeController implements Initializable {
         }
     }
 
-    public void addToQueueButtonPressed(JFXListView<String> listView) {
-        queue.add(listView.getSelectionModel().getSelectedItem());
-    }
-
+    //this method is used to add song to queue from library list  view
     public void addToQueueButtonPressedLibrary(ActionEvent actionEvent){
-        addToQueueButtonPressed(songsListView);
+        queue.add(songsListView.getSelectionModel().getSelectedItem());
     }
 
     public void  addToQueueButtonPressedPlaylist(ActionEvent actionEvent){
-        addToQueueButtonPressed(playlistListView);
+        queue.add(playlistListView.getSelectionModel().getSelectedItem());
     }
 
+    //this method adds the song to queue from home page table view
+    public void tableAddToQueueButtonPressed(){
+        queue.add(songsTableView.getSelectionModel().getSelectedItem().getSongName());
+    }
 
+    //this method clears the queue
     public void clearQueueButtonPressed(){
         queue.clear();
         stop();
-        // fileList.clear();
+        fileList.clear();
     }
 
-
+    //this method is used to play a particular song in playlist by clicking the right button over it
     public void menuPlayButtonPressed(){
         handlePlay(playlistListView.getSelectionModel().getSelectedItem());
     }
 
-
-    public void homeButtonPressed(){
-        homePagePane.toFront();
-    }
-
-    public void addToHistory(String songName){
-
-
-    }
-
-    public void historyButtonPressed(){
+    //this method displays the recently played songs from the server
+    public void recentlyPlayedButtonPressed() throws IOException {
+        songs.clear();
         currentPlaylist = "recents";
         libraryPane.toFront();
         libraryNameLabel.setText("Recently Played");
+        getLikedSongs();
+        AppData recentlyPlayed = new AppData("recentlyPlayed");
+        Main.clientOutputStream.writeObject(recentlyPlayed);
+        System.out.println("Reading list of song  from server");
+        String str1 , str2 , str3 ;
+        while (!"".equals(str1 = Main.clientInputStream.readUTF())){
+            str2 = Main.clientInputStream.readUTF();
+            if(likedSongs.contains(str1)){
+                str3 = "Liked";
+            }
+            else{
+                str3 = "Unliked";
+            }
+            System.out.println("Song Name : "+ str1);
+            System.out.println("Artist name: " + str2);
+            System.out.println(str3);
+            songs.add(new SongData(str1 , str2 , str3));
+        }
+        songsTableView.setItems(songs);
+        searchedTableView = null;
+        searchedTableView = songsTableView;
+        homePageSongsPane.toFront();
+        homePageLabel.setText("Recently Played");
+        songsTableView.getSelectionModel().select(0);
+        songsTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    currentSong = songsTableView.getSelectionModel().getSelectedItem().getSongName();
+                    currentlyPlayingPlaylist = "recents";
+                    queue.clear();
+                    queue.add(currentSong);
+                    handlePlay(currentSong);
+                }
+            }
+        });
+ }
+
+ //this method displays the play history from the server
+    public void historyButtonPressed() throws IOException {
+        songsPanePlayButton.setVisible(false);
+        songsPanePlayButton.setDisable(true);
+        AppData history = new AppData("getHistory");
+        Main.clientOutputStream.writeObject(history);
+        currentPlaylist = "userHistory";
+        songPane.toFront();
+        songNameLabel.setText("User History");
+        ObservableList<String> songname = FXCollections.observableArrayList();
+        String Name;
+        while (!"".equals(Name = Main.clientInputStream.readUTF())) {
+            System.out.println(Name);
+            songname.add(Name);
+        }
+        songsListView.setItems(songname);
+        searchListView = songsListView;
+        songsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                String str = songsListView.getSelectionModel().getSelectedItem();
+                str = str.substring(0, str.indexOf(" @ "));
+                currentSong = str;
+                handlePlay(str);
+            }
+        });
     }
 
-
+     //this method is a filter to display all artists from the server
     public void artistButtonPressed() {
         searchListView = null;
         System.out.println("entered artist fuction");
@@ -1155,8 +1354,7 @@ public class HomeController implements Initializable {
             System.out.println("Error getting artist data");
         }
     }
-
-
+    //this method is a filter to display all genres from the server
     public void genreButtonPressed(){
         searchListView = null;
         currentPlaylist ="library";
@@ -1182,10 +1380,12 @@ public class HomeController implements Initializable {
                 }
             });
         }catch(Exception e){
+            e.printStackTrace();
             System.out.println("Error getting genre data");
         }
     }
 
+    //this method is a filter to display all languages from the server
     public void languagesButtonPressed(){
         searchListView = null;
         currentPlaylist ="library";
@@ -1215,23 +1415,17 @@ public class HomeController implements Initializable {
         }
     }
 
-    public void likedSongsButtonPressed(){
-        currentPlaylist ="library";
-        libraryPane.toFront();
-        libraryNameLabel.setText("Liked Songs");
-        libraryListView.setItems(null);
-    }
-
+    //this method displays all the songs of the selected artist, genre or language froml the server
     public void getSongs(String name , String type){
+        songsPanePlayButton.setVisible(true);
+        songsPanePlayButton.setDisable(false);
         searchListView = null;
+        songList.clear();
         currentPlaylist ="library";
-        ObservableList<String> songList = FXCollections.observableArrayList();
         songPane.toFront();
         songNameLabel.setText(name);
         try {
-            AppData getSongs = new AppData("getSongs");
-            getSongs.setName(name);
-            getSongs.setType(type);
+            AppData getSongs = new AppData("getSongs", type , name);
             Main.clientOutputStream.writeObject(getSongs);
             System.out.println("Reading list of song  from server");
             String songName ;
@@ -1245,13 +1439,13 @@ public class HomeController implements Initializable {
             songsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                  if(mouseEvent.getButton() == MouseButton.PRIMARY) {
-                      currentSong = songsListView.getSelectionModel().getSelectedItem();
-                      currentlyPlayingPlaylist = "library";
-                      queue.clear();
-                      queue.add(currentSong);
-                      handlePlay(currentSong);
-                  }
+                    if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                        currentSong = songsListView.getSelectionModel().getSelectedItem();
+                        currentlyPlayingPlaylist = "library";
+                        queue.clear();
+                        queue.add(currentSong);
+                        handlePlay(currentSong);
+                    }
                 }
             });
         } catch (Exception e) {
@@ -1260,10 +1454,79 @@ public class HomeController implements Initializable {
         }
     }
 
+    //this method displays the liked songs of the user from the server
+    public void likedSongsButtonPressed(){
+        currentPlaylist ="library";
+        homePageSongsPane.toFront();
+        allLikedSongs.clear();
+        allSongsButtonPressed();
+        homePageLabel.setText("Liked Songs");
+        songsTableView.setItems(allLikedSongs);
+        searchedTableView = null;
+        searchedTableView = songsTableView;
+        songsTableView.getSelectionModel().select(0);
+        songsTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    currentSong = songsTableView.getSelectionModel().getSelectedItem().getSongName();
+                    currentlyPlayingPlaylist = "library";
+                    queue.clear();
+                    queue.add(currentSong);
+                    handlePlay(currentSong);
+                }
+            }
+        });
+    }
+
+
+    //this method is used to get all the liked songs from the server to set the like button as enabled or disabled in the table view
+    public void getLikedSongs() {
+        try {
+            likedSongs.clear();
+            AppData getLikedSongs = new AppData("getLikedSongs");
+            Main.clientOutputStream.writeObject(getLikedSongs);
+            String str ;
+            while (!"".equals(str = Main.clientInputStream.readUTF())) {
+                System.out.println(str);
+                likedSongs.add(str);
+            }
+        } catch (Exception e) {
+            System.out.println("Error getting liked songs");
+            e.printStackTrace();
+        }
+    }
+
+    //this method adds the song to server as soon as the like button is pressed
+    public void likeButtonPressed(){
+        getLikedSongs();
+        if (likedSongs.contains(currentSong)) {
+            System.out.println("Unliked" + currentSong);
+            try {
+                likeButtonImage.setImage(new Image(new FileInputStream("src/client/Icons/heart.png")));
+                AppData removeFromLikedSongs = new AppData("removeFromLikedSongs", currentSong);
+                Main.clientOutputStream.writeObject(removeFromLikedSongs);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("liked" + currentSong);
+            try {
+                likeButtonImage.setImage(new Image(new FileInputStream("src/client/Icons/heartSelected.png")));
+                AppData addToLikedSongs = new AppData("addToLikedSongs", currentSong);
+                Main.clientOutputStream.writeObject(addToLikedSongs);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
     JFXListView searchListView;
 
-
-   public void searchFunction(MouseEvent event) {
+    //this method is to search any song  from the library section
+    public void searchFunction(MouseEvent event) {
         ObservableList<String> toSearch = searchListView.getItems();
         searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -1283,6 +1546,44 @@ public class HomeController implements Initializable {
         });
     }
 
+    TableView<SongData> searchedTableView = null;
+
+    //this method is used to search any artist or song form the table view
+    public void tableSearchFunction(MouseEvent mouseEvent) {
+        ObservableList<SongData> toSearch = searchedTableView.getItems();
+        getLikedSongs();
+        ObservableList<String> songList = FXCollections.observableArrayList();
+        ObservableList<String> artistList = FXCollections.observableArrayList();
+        ObservableList<String> likedsongsList = FXCollections.observableArrayList();
+        for (SongData x : toSearch) {
+            songList.add(x.getSongName());
+            artistList.add(x.getArtistName());
+            if (likedSongs.contains(x.getSongName())) {
+                likedsongsList.add("Liked");
+            } else {
+                likedsongsList.add("Unliked");
+            }
+        }
+        tableSearchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                ObservableList<SongData> searchedTable = FXCollections.observableArrayList();
+                String searching = null;
+                searching = tableSearchField.getText();
+                for (int i = 0; i < toSearch.size(); i++) {
+                    if (containsIgnoreCase(songList.get(i), searching)) {
+                        searchedTable.add(new SongData(songList.get(i), artistList.get(i), likedsongsList.get(i)));
+                    } else if (containsIgnoreCase(artistList.get(i), searching)) {
+                        searchedTable.add(new SongData(songList.get(i), artistList.get(i), likedsongsList.get(i)));
+                    }
+
+                }
+                songsTableView.setItems(searchedTable);
+            }
+        });
+    }
+
+    //this is a method to ignore case while searching
     public static boolean containsIgnoreCase(String str, String searchStr) {
         if (str == null || searchStr == null) {
             return false;
@@ -1297,7 +1598,7 @@ public class HomeController implements Initializable {
         return false;
     }
 
-
+    //this method is to search any artist , genre , language in library section
     public void searchFunction1(MouseEvent event) {
         ObservableList<String> toSearch = searchListView.getItems();
         searchField1.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -1318,33 +1619,269 @@ public class HomeController implements Initializable {
         });
     }
 
+    //this method is to search any local song or videos
+    public void localSearchFunction(MouseEvent mouseEvent) {
+        ObservableList<String> toSearch = searchListView.getItems();
+        localSearchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
 
+                ObservableList<String> searchedList = FXCollections.observableArrayList();
+                String searching = null;
+                searching = localSearchField.getText();
+                for (int i = 0; i < toSearch.size(); i++) {
+                    if (containsIgnoreCase(toSearch.get(i), searching)) {
+                        System.out.println(toSearch.get(i));
+                        searchedList.add(toSearch.get(i));
+                    }
+                }
+                localSongsListView.setItems(searchedList);
+            }
+        });
+    }
 
-    private void switchPane(int paneNo)
-    {
-        // 1 : home 2 : Library, 3: playlists
-        if(currentSelectedPane!=paneNo)
-        {
-            if(paneNo == 1)
-            {
-               // homePane.toFront();
-            }
-            else if(paneNo == 2)
-            {
-                rootPanel.toFront();
-                libraryPane.toFront();
+    //this method brings the home page to front on pressed
+    public void homeButtonPressed(){
+        homePagePane.toFront();
+    }
 
+    //this method gets all the songs in the server
+    public void allSongsButtonPressed(){
+        try{
+            songs.clear();
+            getLikedSongs();
+            AppData getAllSongs = new AppData("getAllSongs");
+            Main.clientOutputStream.writeObject(getAllSongs);
+            System.out.println("Reading list of song  from server");
+            String str1 , str2 , str3 ;
+            while (!"".equals(str1 = Main.clientInputStream.readUTF())){
+                 str2 = Main.clientInputStream.readUTF();
+                 if(likedSongs.contains(str1)){
+                     str3 = "Liked";
+                     allLikedSongs.add(new SongData(str1 , str2 , str3));
+                 }
+                 else{
+                     str3 = "Unliked";
+                 }
+                 System.out.println("Song Name : "+ str1);
+                 System.out.println("Artist name: " + str2);
+                 System.out.println(str3);
+                 songs.add(new SongData(str1 , str2 , str3));
             }
-            else if(paneNo == 3)
-            {
-                rootPanel.toFront();
-                playlistPane.toFront();
+            songsTableView.setItems(songs);
+            searchedTableView = null;
+            searchedTableView = songsTableView;
+            homePageSongsPane.toFront();
+            homePageLabel.setText("All Songs");
+            songsTableView.getSelectionModel().select(0);
+            songsTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                    currentSong = songsTableView.getSelectionModel().getSelectedItem().getSongName();
+                    currentlyPlayingPlaylist = "library";
+                    queue.clear();
+                    queue.add(currentSong);
+                    handlePlay(currentSong);
+                }
             }
-            currentSelectedPane = paneNo;
+        });
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Unable to get songs");
         }
     }
 
+
+    //this method gets the top50 most played songs amongst all users
+    public void top50SongsButtonPressed(){
+        songs.clear();
+        AppData top50Songs = new AppData("getTop50Songs");
+        try{
+            getLikedSongs();
+            Main.clientOutputStream.writeObject(top50Songs);
+            String str , str1 , str2;
+            while(!"".equals(str = Main.clientInputStream.readUTF())){
+                str1 = Main.clientInputStream.readUTF();
+                if(likedSongs.contains(str))
+                {
+                    str2 = "Liked";
+                }
+                else{
+                    str2 = "Unliked";
+                }
+                System.out.println("Song Name : "+ str);
+                System.out.println("Artist name: " + str1);
+                System.out.println(str2);
+                songs.add(new SongData(str , str1 , str2));
+            }
+            homePageSongsPane.toFront();
+            songsTableView.setItems(songs);
+            searchedTableView = null;
+            searchedTableView = songsTableView;
+            homePageLabel.setText("Top 50 Songs");
+            songsTableView.getSelectionModel().select(0);
+            songsTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                        currentSong = songsTableView.getSelectionModel().getSelectedItem().getSongName();
+                        currentlyPlayingPlaylist = "library";
+                        queue.clear();
+                        queue.add(currentSong);
+                        handlePlay(currentSong);
+                    }
+                }
+            });
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("cannot send request to server ");
+        }
+    }
+
+    //this method displays newly added songs to the server
+    public void newlyAddedButtonPressed(){
+        try {
+            songs.clear();
+            getLikedSongs();
+            AppData getNewSongs = new AppData("getnewsongs");
+            Main.clientOutputStream.writeObject(getNewSongs);
+            String str, str1, str2;
+            while (!"".equals(str = Main.clientInputStream.readUTF())) {
+                str1 = Main.clientInputStream.readUTF();
+                if (likedSongs.contains(str)) {
+                    str2 = "Liked";
+                } else {
+                    str2 = "Unliked";
+                }
+                System.out.println("Song Name : " + str);
+                System.out.println("Artist name: " + str1);
+                System.out.println(str2);
+                songs.add(new SongData(str, str1, str2));
+            }
+            homePageSongsPane.toFront();
+            songsTableView.setItems(songs);
+            searchedTableView = null;
+            searchedTableView = songsTableView;
+            homePageLabel.setText("New Songs");
+            songsTableView.getSelectionModel().select(0);
+            songsTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                        currentSong = songsTableView.getSelectionModel().getSelectedItem().getSongName();
+                        currentlyPlayingPlaylist = "library";
+                        queue.clear();
+                        queue.add(currentSong);
+                        handlePlay(currentSong);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //this method gets the most played songs by the current user
+    public void mostPlayedButtonPressed()  {
+        songs.clear();
+        AppData mostPlayedSongs = new AppData("mostPlayedSongs");
+        try{
+            getLikedSongs();
+            Main.clientOutputStream.writeObject(mostPlayedSongs);
+            String str , str1 , str2;
+            while(!"".equals(str = Main.clientInputStream.readUTF())){
+                str1 = Main.clientInputStream.readUTF();
+                if(likedSongs.contains(str))
+                {
+                    str2 = "Liked";
+                }
+                else{
+                    str2 = "Unliked";
+                }
+                System.out.println("Song Name : "+ str);
+                System.out.println("Artist name: " + str1);
+                System.out.println(str2);
+                songs.add(new SongData(str , str1 , str2));
+            }
+            homePageSongsPane.toFront();
+            songsTableView.setItems(songs);
+            searchedTableView = null;
+            searchedTableView = songsTableView;
+            homePageLabel.setText("Most Played Songs");
+            songsTableView.getSelectionModel().select(0);
+            songsTableView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                        currentSong = songsTableView.getSelectionModel().getSelectedItem().getSongName();
+                        currentlyPlayingPlaylist = "library";
+                        queue.clear();
+                        queue.add(currentSong);
+                        handlePlay(currentSong);
+                    }
+                }
+            });
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("cannot send request to server ");
+        }
+    }
+
+    //this method gets recommendations based on the songs played at a particular time of the day
+    public void getRecommendedSongs(){
+        AppData getRecommendedSongs = new AppData("getRecommendedSongs");
+        try{
+            Main.clientOutputStream.writeObject(getRecommendedSongs);
+            String str ;
+            while(!"".equals(str = Main.clientInputStream.readUTF())){
+                if(!songList.contains(str)){
+                    songList.add(str);
+                }
+            }
+            songPane.toFront();
+            songsListView.setItems(songList);
+            searchListView = null;
+            searchListView = songsListView;
+            songNameLabel.setText("Recommended Songs");
+            songsListView.getSelectionModel().select(0);
+            songsListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                        currentSong = songsListView.getSelectionModel().getSelectedItem();
+                        currentlyPlayingPlaylist = "library";
+                        queue.clear();
+                        queue.add(currentSong);
+                        handlePlay(currentSong);
+                    }
+                }
+            });
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("cannot send request to server ");
+        }
+    }
+
+    //this is to sign out current user
+    public void signOutButtonPressed() throws IOException {
+        if(mediaPlayer!=null)
+        {
+            mediaPlayer.dispose();
+        }
+        Stage loginPage = new Stage();
+        loginPage.setTitle("Login");
+        mainPane.getScene().getWindow().hide();
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        loginPage.setScene(new Scene(root, 631, 463));
+        loginPage.show();
+        AppData signOut = new AppData("signOut");
+        Main.clientOutputStream.writeObject(signOut);
+        Main m = new Main();
+    }
 }
+
+
 
 
 
