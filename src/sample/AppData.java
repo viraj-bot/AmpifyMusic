@@ -1,12 +1,6 @@
-package client;
-
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+package sample;
 
 import java.io.Serializable;
-import java.security.spec.RSAOtherPrimeInfo;
-import java.util.List;
 
 public class AppData implements Serializable {
     private String name1;

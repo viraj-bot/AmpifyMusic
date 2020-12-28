@@ -56,27 +56,20 @@
 
 .scroll-bar:horizontal .thumb,
 .scroll-bar:vertical .thumb {
-    -fx-background-color :derive(#242323,10.0%);
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
-}
-
-.scroll-bar:horizontal .hover,
-.scroll-bar:vertical .hover {
-    -fx-background-color :derive(#616161,90.0%);
+    -fx-background-color :derive(black,10.0%);
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em;
 }
 
 .scroll-bar:horizontal .thumb:hover,
 .scroll-bar:vertical .thumb:hover {
-    -fx-background-color :derive(#616161,90.0%);
+    -fx-background-color :derive(black,90.0%);
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em;
 }
 
 .current_playlist_song > Label{
-    -fx-text-fill:	#1DB954;
+    -fx-text-fill:green;
 }
 
 .card {
@@ -103,7 +96,7 @@
 }
 
 .jfx-text-field {
-    -jfx-focus-color : 	#1DB954;
+    -jfx-focus-color : #0e9654;
     -jfx-unfocus-color : #a1a1a1;
 }
 
@@ -125,6 +118,10 @@
     -fx-text-fill: white;
 }
 
+.list-view .list-cell2 {
+    -fx-background-color:  black;
+    -fx-text-fill: white;
+}
 
 .list-view {
     -fx-text-fill: white;
@@ -155,11 +152,11 @@
 }
 
 .jfx-rippler {
-    -jfx-rippler-fill: 	#1DB954;
+    -jfx-rippler-fill: #0e9654;
 }
 
 .label_green {
-    -fx-text-fill : #1DB954;
+    -fx-text-fill : #0e9654;
 }
 
 *{
@@ -178,6 +175,6 @@
 }
 
 .slider .thumb {
-    -fx-background-color:  	#1DB954;
+    -fx-background-color:  #0F9D58;
     -fx-background-radius: 20;
 }

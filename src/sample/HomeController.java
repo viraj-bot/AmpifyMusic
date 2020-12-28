@@ -1,7 +1,6 @@
 package sample;
 
 import com.jfoenix.controls.*;
-import com.sun.javafx.webkit.KeyCodeMap;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.beans.InvalidationListener;
@@ -38,7 +37,6 @@ public class HomeController implements Initializable {
     private List<File> fileList;
     private List<File> fileList1;
     private List<File> fileList2;
-    int currentSelectedPane = 3;
     boolean equaliserIsFront = false, lyricsPaneIsFront = false, queuePaneIsFront = false;
     private ObservableList<String> playlistNames = FXCollections.observableArrayList();   //to store the names of playlists locally
     private ObservableList<String> queue = FXCollections.observableArrayList();
@@ -52,9 +50,6 @@ public class HomeController implements Initializable {
     String currentTime2;
     AudioEqualizer equalizer;
     ObservableList<EqualizerBand> bands;
-
-    @FXML
-    private JFXTextField lyricshere;
     @FXML
     private JFXToggleButton ONOFF;
     @FXML
@@ -63,10 +58,6 @@ public class HomeController implements Initializable {
     private AnchorPane mediaViewPanel;
     @FXML
     private Label totalSongNumber;
-    @FXML
-    private MenuItem menuPlayButton;
-    @FXML
-    private JFXButton addButton;
     @FXML
     private Label libraryNameLabel;
     @FXML
@@ -991,18 +982,12 @@ public class HomeController implements Initializable {
             while (flag && bool) {
                 try {
 
-                        System.out.println("1");
+                    System.out.println("");
                     if (lyrics.containsKey(currentTime2)) {
                         System.out.print("2");
-//                        String s = String.valueOf(lyrics.get(currentTime2));
-                        System.out.print("3");
-//                        System.out.println(s);
-//                        System.out.print("4");
                         lyricsTextArea.setText(String.valueOf(lyrics.get(currentTime2)));
                         System.out.print("5");
                         Thread.sleep(endTime.get(currentTime2));
-                        lyricsTextArea.setText("");
-                        System.out.print("6");
                     }
                 } catch (Exception e) {
                     System.out.println("here7");

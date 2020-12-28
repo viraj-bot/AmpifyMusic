@@ -13,7 +13,7 @@ public class Database_Connection {
             Class.forName("com.mysql.cj.jdbc.Driver");
             System.out.println("Driver loaded");
             //below statement
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/database", "root", "Ds7727956757");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/amplify", "root", "Vir123@#!");
             System.out.println("connection elsatblished");
             stat = con.createStatement();
 

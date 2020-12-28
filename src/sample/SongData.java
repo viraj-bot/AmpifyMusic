@@ -1,13 +1,9 @@
-package client;
+package sample;
 
-import java.awt.*;
 import java.io.FileInputStream;
-import java.time.LocalDate;
-import java.time.Period;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
@@ -25,11 +21,11 @@ public class SongData extends RecursiveTreeObject<SongData> {
         this.songName = new SimpleStringProperty(songName);
         this.artistName = new SimpleStringProperty(artistName);                            //this class is to set elements to table view
         try {
-            Image playI = new Image(new FileInputStream("src/client/Icons/heart.png"));
+            Image playI = new Image(new FileInputStream("src/sample/Icons/heart.png"));
             ImageView iv1 = new ImageView(playI);
             iv1.setFitHeight(16);
             iv1.setFitWidth(16);
-            Image playI2 = new Image(new FileInputStream("src/client/Icons/heartSelected.png"));
+            Image playI2 = new Image(new FileInputStream("src/sample/Icons/heartSelected.png"));
             ImageView iv2 = new ImageView(playI2);
             iv2.setFitHeight(16);
             iv2.setFitWidth(16);
